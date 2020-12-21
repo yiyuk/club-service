@@ -1,0 +1,120 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="net.lab1024.smartadmin.module.system.position.PositionDao">
+
+
+    <sql id="baseSql">
+        id,
+        position_name,
+        remark,
+        update_time,
+        create_time,
+        join_time,
+        join_approver_id,
+        exit_time,
+        exit_approver_id,
+        status
+    </sql>
+
+    <select id="selectByPage" resultType="net.lab1024.smartadmin.module.system.position.domain.entity.PositionEntity">
+        SELECT
+        <include refid="baseSql"></include>
+        FROM
+        t_position
+        <where>
+            <if test="queryDTO.positionName != null and queryDTO.positionName != ''">
+                AND INSTR(position_name,#{queryDTO.positionName})
+            </if>
+        </where>
+        order by create_time desc
+    </select>
+
+    <select id="selectRelation" resultType="net.lab1024.smartadmin.module.system.position.domain.dto.PositionRelationResultDTO">
+        SELECT
+        job.position_name,
+        rel.position_id,
+        rel.employee_id,
+        rel.update_time,
+        rel.create_time,
+        rel.join_time,
+        rel.join_approver_id,
+        rel.exit_time,
+        rel.exit_approver_id,
+        rel.status
+        FROM
+        t_position_relation rel
+        LEFT JOIN t_position job ON rel.position_id = job.id
+        <where>
+            <if test="positionId != null">
+                AND rel.position_id = #{positionId}
+            </if>
+            <if test="employeeId != null">
+                AND rel.employee_id = #{employeeId}
+            </if>
+        </where>
+    </select>
+
+    <select id="selectEmployeesRelation" resultType="net.lab1024.smartadmin.module.system.position.domain.dto.PositionRelationResultDTO">
+        SELECT
+        job.position_name,
+        rel.position_id,
+        rel.employee_id,
+        rel.update_time,
+        rel.create_time,
+        rel.join_time,
+        rel.join_approver_id,
+        rel.exit_time,
+        rel.exit_approver_id,
+        rel.status
+        FROM
+        t_position_relation rel
+        LEFT JOIN t_position job ON rel.position_id = job.id
+        <where>
+            rel.employee_id IN
+            <foreach collection="employeeIdList" item="item" separator="," open="(" close=")">
+                #{item}
+            </foreach>
+        </where>
+    </select>
+
+    <insert id="insertBatchRelation">
+        INSERT INTO t_position_relation (position_id,employee_id) VALUES
+        <foreach collection="batchDTO.positionIdList" item="item" separator=",">
+            (#{item},#{batchDTO.employeeId})
+        </foreach>
+    </insert>
+
+    <insert id="insertRelation">
+        INSERT INTO t_position_relation (position_id,employee_id,status) VALUES
+            (#{addDTO.positionId},#{addDTO.employeeId},#{addDTO.status})
+    </insert>
+
+
+    <delete id="deleteRelation">
+        DELETE FROM t_position_relation
+        WHERE employee_id = #{positionQueryDTO.employeeId} AND position_id = #{positionQueryDTO.positionId}
+    </delete>
+
+    <delete id="deleteRelationByEmployeeId">
+        DELETE FROM t_position_relation WHERE employee_id = #{employeeId}
+    </delete>
+
+    <delete id="deleteRelationByPositionId">
+        DELETE FROM t_position_relation WHERE position_id = #{positionId}
+    </delete>
+
+    <update id="updateRelation">
+        UPDATE t_position_relation rel
+        SET
+          rel.status = #{updateDTO.status},
+          rel.join_time = #{joinTime},
+          rel.join_approver_id = #{joinApproverId},
+          rel.exit_time = #{updateDTO.exitTime},
+          rel.exit_approver_id = #{updateDTO.exitApproverId}
+        WHERE
+          rel.position_id = #{updateDTO.positionId}
+        AND
+          rel.employee_id = #{updateDTO.employeeId}
+    </update>
+
+</mapper>
