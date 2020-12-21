@@ -4,6 +4,7 @@ import com.baomidou.mybatisplus.core.mapper.BaseMapper;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import net.lab1024.smartadmin.module.system.position.domain.dto.*;
 import net.lab1024.smartadmin.module.system.position.domain.entity.PositionEntity;
+import net.lab1024.smartadmin.module.system.position.domain.entity.PositionRelationEntity;
 import org.apache.ibatis.annotations.Mapper;
 import org.apache.ibatis.annotations.Param;
 import org.springframework.stereotype.Component;
@@ -27,6 +28,14 @@ public interface PositionDao extends BaseMapper<PositionEntity> {
     List<PositionEntity> selectByPage(Page page, @Param("queryDTO") PositionQueryDTO queryDTO);
 
     /**
+     * 查询社团
+     *
+     * @param id
+     * @return
+     */
+    PositionEntity selectPositionByID(@Param("id")Long id);
+
+    /**
      * 根据社团ID或用户ID 查询社团与用户关系
      *
      * @param positionRelationQueryDTO
@@ -40,6 +49,8 @@ public interface PositionDao extends BaseMapper<PositionEntity> {
      * @return
      */
     List<PositionRelationResultDTO> selectEmployeesRelation(@Param("employeeIdList") List<Long> employeeIdList);
+
+    List<PositionRelationEntity> selectRelByPage(Page page, @Param("queryDTO") PositionRelationQueryDTO queryDTO);
 
     /**
      * 批量添加社团 用户 关联关系

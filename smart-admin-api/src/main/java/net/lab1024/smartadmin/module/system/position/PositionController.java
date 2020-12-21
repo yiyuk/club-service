@@ -1,10 +1,12 @@
 package net.lab1024.smartadmin.module.system.position;
 
 import io.swagger.annotations.ApiModelProperty;
+import net.lab1024.smartadmin.common.anno.NoNeedLogin;
 import net.lab1024.smartadmin.common.anno.OperateLog;
 import net.lab1024.smartadmin.common.domain.PageResultDTO;
 import net.lab1024.smartadmin.common.domain.ResponseDTO;
 import net.lab1024.smartadmin.constant.SwaggerTagConst;
+import net.lab1024.smartadmin.module.business.peony.domain.dto.PeonyQueryDTO;
 import net.lab1024.smartadmin.module.system.position.domain.dto.*;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
@@ -48,20 +50,21 @@ public class PositionController {
         return positionService.queryPositionById(id);
     }
 
-    @ApiOperation(value = "根据ID删除社团", notes = "根据ID删除社团 @author zzr")
-    @GetMapping("/position/remove/{id}")
-    public ResponseDTO<String> removeJob(@PathVariable Long id) {
-        return positionService.removePosition(id);
+    @ApiOperation(value = "根据单一条件分页查询社团-用户关联", notes = "根据单一条件分页查询社团-用户关联 @author hxy")
+    @PostMapping("/position/queryRelationByPage")
+    public ResponseDTO<PageResultDTO<PositionRelationResultDTO>> queryRelationByPage(@RequestBody @Valid PositionRelationQueryDTO queryDTO) {
+        return positionService.queryRelationByPage(queryDTO);
     }
 
-
-    @ApiModelProperty(value = "用户入团退团申请", notes = "用户入团退团申请 @author hxy")
+    //@NoNeedLogin
+    @ApiOperation(value = "用户入团退团申请", notes = "用户入团退团申请 @author hxy")
     @PostMapping("/position/applyPositionRelation")
     public ResponseDTO<String> applyPositionRelation(@RequestBody @Valid PositionRelationUpdateDTO updateDTO){
         return positionService.applyPositionRelation(updateDTO);
     }
 
-    @ApiModelProperty(value = "审批用户入团退团申请", notes = "审批用户入团退团申请 @author hxy")
+    //@NoNeedLogin
+    @ApiOperation(value = "审批用户入团退团申请", notes = "审批用户入团退团申请 @author hxy")
     @PostMapping("/position/approvePositionRelation")
     public ResponseDTO<String> approvePositionRelation(@RequestBody @Valid PositionRelationUpdateDTO updateDTO){
         return positionService.approvePositionRelation(updateDTO);

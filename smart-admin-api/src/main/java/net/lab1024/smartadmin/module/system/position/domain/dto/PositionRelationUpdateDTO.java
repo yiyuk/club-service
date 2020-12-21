@@ -25,7 +25,7 @@ public class PositionRelationUpdateDTO{
 
     @ApiModelProperty("关联状况")
     @NotNull(message = "关联状况 不能为空")
-    private String status;
+    private Integer status;
 
     @ApiModelProperty("入社审批人ID")
     private Long joinApproverID;
@@ -42,7 +42,7 @@ public class PositionRelationUpdateDTO{
     @ApiModelProperty("退社时间")
     private Date exitTime;
 
-    public PositionRelationUpdateDTO(@NotNull(message = "社团ID 不能为空") Long positionId, @NotNull(message = "用户ID 不能为空") Long employeeId, @NotNull(message = "关联状况 不能为空") String status, Long joinApproverID, Long exitApproverID, Boolean applyResult, Date joinTime, Date exitTime) {
+    public PositionRelationUpdateDTO(@NotNull(message = "社团ID 不能为空") Long positionId, @NotNull(message = "用户ID 不能为空") Long employeeId, @NotNull(message = "关联状况 不能为空") Integer status, Long joinApproverID, Long exitApproverID, Boolean applyResult, Date joinTime, Date exitTime) {
         this.positionId = positionId;
         this.employeeId = employeeId;
         this.status = status;

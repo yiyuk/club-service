@@ -30,7 +30,7 @@ public class PositionRelationAddDTO {
 
     @ApiModelProperty("关联状况")
     @NotNull(message = "关联状况 不能为空")
-    private String status;
+    private Integer status;
 
     public PositionRelationAddDTO() {
     }
@@ -38,10 +38,10 @@ public class PositionRelationAddDTO {
     public PositionRelationAddDTO(List<Long> positionIdList, Long employeeId) {
         this.positionIdList = positionIdList;
         this.employeeId = employeeId;
-        this.status = PositionRelationTypeEnum.JOIN_WAIT.toString();
+        this.status = PositionRelationTypeEnum.JOIN_WAIT.getValue();
     }
 
-    public PositionRelationAddDTO(@NotNull(message = "社团ID 不能为空") Long positionId, @NotNull(message = "用户ID 不能为空") Long employeeId, @NotNull(message = "关联状况 不能为空") String status) {
+    public PositionRelationAddDTO(@NotNull(message = "社团ID 不能为空") Long positionId, @NotNull(message = "用户ID 不能为空") Long employeeId, @NotNull(message = "关联状况 不能为空") Integer status) {
         this.positionId = positionId;
         this.employeeId = employeeId;
         this.status = status;

@@ -27,6 +27,34 @@
             </if>
         </where>
         order by create_time desc
+    </select>selectRelByPage
+
+    <select id="selectRelByPage" resultType="net.lab1024.smartadmin.module.system.position.domain.entity.PositionRelationEntity">
+        SELECT
+        <include refid="baseSql"></include>
+        FROM
+        t_position_relation rel
+        <where>
+            <if test="queryDTO.positionName != null and queryDTO.positionName != ''">
+                AND INSTR(position_name,#{queryDTO.positionName})
+            </if>
+            <if test="queryDTO.positionId != null">
+                AND rel.position_id = #{queryDTO.positionId}
+            </if>
+            <if test="queryDTO.employeeId != null">
+                AND rel.employee_id = #{queryDTO.employeeId}
+            </if>
+            <if test="queryDTO.status != null and queryDTO.status != ''">
+                AND rel.status = #{queryDTO.status}
+            </if>
+        </where>
+        order by create_time desc
+    </select>
+
+    <select id="selectPositionByID" resultType="net.lab1024.smartadmin.module.system.position.domain.entity.PositionEntity">
+        SELECT *
+        FROM t_position
+        WHERE id = {id}
     </select>
 
     <select id="selectRelation" resultType="net.lab1024.smartadmin.module.system.position.domain.dto.PositionRelationResultDTO">

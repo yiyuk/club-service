@@ -38,9 +38,9 @@ public class PositionRelationResultDTO {
     private Date createTime;
 
     /**
-     * 用户状况
+     * 关联状况
      */
-    private String status;
+    private Integer status;
 
     /**
      * 入社时间

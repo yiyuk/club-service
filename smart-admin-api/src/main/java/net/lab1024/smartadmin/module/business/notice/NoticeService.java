@@ -117,6 +117,17 @@ public class NoticeService {
         return ResponseDTO.succ();
     }
 
+    public ResponseDTO<String> addToUser(NoticeAddDTO addDTO, Long userID) {
+        NoticeEntity entity = SmartBeanUtil.copy(addDTO, NoticeEntity.class);
+        entity.setCreateTime(new Date());
+        entity.setUpdateTime(new Date());
+        entity.setCreateUser(userID);
+        entity.setSendStatus(JudgeEnum.NO.getValue());
+        entity.setDeleted(JudgeEnum.NO.getValue());
+        noticeDao.insert(entity);
+        return ResponseDTO.succ();
+    }
+
     /**
      * @author yandanyang
      * @description 编辑

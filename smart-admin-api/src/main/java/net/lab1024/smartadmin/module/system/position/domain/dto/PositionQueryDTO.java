@@ -12,6 +12,9 @@ import lombok.Data;
 @Data
 public class PositionQueryDTO extends PageParamDTO {
 
+    @ApiModelProperty("社团ID")
+    private String id;
+
     @ApiModelProperty("社团名称")
     private String positionName;
 

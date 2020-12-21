@@ -38,7 +38,4 @@ public class PositionResultVO {
     @ApiModelProperty("社团描述")
     private String remark;
 
-    @ApiModelProperty("关联状态")
-    private String status;
-
 }

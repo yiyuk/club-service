@@ -28,7 +28,7 @@ public class PositionRelationEntity extends BaseEntity {
     /**
      * 用户状况
      */
-    private String status;
+    private Integer status;
 
     /**
      * 入社时间
