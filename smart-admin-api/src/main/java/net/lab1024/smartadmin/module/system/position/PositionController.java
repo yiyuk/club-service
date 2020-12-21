@@ -55,15 +55,15 @@ public class PositionController {
     }
 
 
-//    @ApiModelProperty(value = "用户入团退团申请", notes = "用户入团退团申请 @author hxy")
-//    @PostMapping("/position/applyPositionRelation")
-//    public ResponseDTO<String> applyPositionRelation(@RequestBody @Valid PositionRelationUpdateDTO updateDTO){
-//        return positionService.applyPositionRelation(updateDTO);
-//    }
-//
-//    @ApiModelProperty(value = "审批用户入团退团申请", notes = "审批用户入团退团申请 @author hxy")
-//    @PostMapping("/position/approvePositionRelation")
-//    public ResponseDTO<String> approvePositionRelation(@RequestBody @Valid PositionRelationUpdateDTO updateDTO){
-//        return positionService.approvePositionRelation(updateDTO);
-//    }
+    @ApiModelProperty(value = "用户入团退团申请", notes = "用户入团退团申请 @author hxy")
+    @PostMapping("/position/applyPositionRelation")
+    public ResponseDTO<String> applyPositionRelation(@RequestBody @Valid PositionRelationUpdateDTO updateDTO){
+        return positionService.applyPositionRelation(updateDTO);
+    }
+
+    @ApiModelProperty(value = "审批用户入团退团申请", notes = "审批用户入团退团申请 @author hxy")
+    @PostMapping("/position/approvePositionRelation")
+    public ResponseDTO<String> approvePositionRelation(@RequestBody @Valid PositionRelationUpdateDTO updateDTO){
+        return positionService.approvePositionRelation(updateDTO);
+    }
 }
