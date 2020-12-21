@@ -4,7 +4,7 @@ import io.swagger.annotations.ApiModelProperty;
 import lombok.Data;
 
 /**
- * 岗位
+ * 社团
  *
  * @author zzr
  */

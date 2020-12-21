@@ -15,13 +15,9 @@ import net.lab1024.smartadmin.module.system.employee.domain.entity.EmployeeEntit
 import net.lab1024.smartadmin.module.system.employee.domain.vo.EmployeeVO;
 import net.lab1024.smartadmin.module.business.login.domain.RequestTokenBO;
 import net.lab1024.smartadmin.module.system.position.PositionDao;
-import net.lab1024.smartadmin.module.system.position.PositionRelationTypeEnum;
-import net.lab1024.smartadmin.module.system.position.PositionResponseCodeConst;
 import net.lab1024.smartadmin.module.system.position.PositionService;
 import net.lab1024.smartadmin.module.system.position.domain.dto.PositionRelationAddDTO;
-import net.lab1024.smartadmin.module.system.position.domain.dto.PositionRelationQueryDTO;
 import net.lab1024.smartadmin.module.system.position.domain.dto.PositionRelationResultDTO;
-import net.lab1024.smartadmin.module.system.position.domain.dto.PositionRelationUpdateDTO;
 import net.lab1024.smartadmin.module.system.privilege.service.PrivilegeEmployeeService;
 import net.lab1024.smartadmin.module.system.role.roleemployee.RoleEmployeeDao;
 import net.lab1024.smartadmin.module.system.role.roleemployee.domain.RoleEmployeeEntity;

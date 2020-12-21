@@ -5,7 +5,7 @@ import net.lab1024.smartadmin.common.domain.BaseEntity;
 import lombok.Data;
 
 /**
- * 岗位
+ * 社团（岗位
  *
  * @author zzr
  */
@@ -14,13 +14,17 @@ import lombok.Data;
 public class PositionEntity extends BaseEntity {
 
     /**
-     * 岗位名称
+     * 社团名称
      */
     private String positionName;
 
     /**
-     * 岗位描述
+     * 社团描述
      */
     private String remark;
 
+//    /**
+//     * 社团经费
+//     */
+//    private Double funds;
 }

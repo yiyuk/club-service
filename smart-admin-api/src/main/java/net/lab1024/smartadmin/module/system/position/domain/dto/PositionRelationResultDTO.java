@@ -5,7 +5,7 @@ import lombok.Data;
 import java.util.Date;
 
 /**
- * 岗位关联关系
+ * 社团-用户关联关系
  *
  * @author zzr
  */
@@ -13,17 +13,17 @@ import java.util.Date;
 public class PositionRelationResultDTO {
 
     /**
-     * 岗位ID
+     * 社团ID
      */
     private Long positionId;
 
     /**
-     * 员工ID
+     * 用户ID
      */
     private Long employeeId;
 
     /**
-     * 岗位名称
+     * 社团名称
      */
     private String positionName;
 
@@ -36,5 +36,30 @@ public class PositionRelationResultDTO {
      * 创建时间
      */
     private Date createTime;
+
+    /**
+     * 用户状况
+     */
+    private String status;
+
+    /**
+     * 入社时间
+     */
+    private Date joinTime;
+
+    /**
+     * 入社审批人id
+     */
+    private Long joinApproverID;
+
+    /**
+     * 退社时间
+     */
+    private Date exitTime;
+
+    /**
+     * 退社审批人id
+     */
+    private Long exitApproverID;
 
 }

@@ -5,14 +5,14 @@ import io.swagger.annotations.ApiModelProperty;
 import lombok.Data;
 
 /**
- * 岗位
+ * 社团
  *
  * @author zzr
  */
 @Data
 public class PositionQueryDTO extends PageParamDTO {
 
-    @ApiModelProperty("岗位名称")
+    @ApiModelProperty("社团名称")
     private String positionName;
 
 }

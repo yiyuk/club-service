@@ -27,15 +27,18 @@ public class PositionResultVO {
     private Date createTime;
 
     /**
-     * 岗位名称
+     * 社团名称
      */
-    @ApiModelProperty("岗位名称")
+    @ApiModelProperty("社团名称")
     private String positionName;
 
     /**
-     * 岗位描述
+     * 社团描述
      */
-    @ApiModelProperty("岗位描述")
+    @ApiModelProperty("社团描述")
     private String remark;
+
+    @ApiModelProperty("关联状态")
+    private String status;
 
 }

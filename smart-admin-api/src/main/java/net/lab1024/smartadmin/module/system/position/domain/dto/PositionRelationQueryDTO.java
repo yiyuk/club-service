@@ -4,17 +4,20 @@ import io.swagger.annotations.ApiModelProperty;
 import lombok.Data;
 
 /**
- * 岗位关系
+ * 社团-用户关系
  *
  * @author zzr
  */
 @Data
 public class PositionRelationQueryDTO {
 
-    @ApiModelProperty("岗位ID")
+    @ApiModelProperty("社团ID")
     private Long positionId;
 
-    @ApiModelProperty("员工ID")
+    @ApiModelProperty("用户ID")
     private Long employeeId;
+
+    @ApiModelProperty("关联状态")
+    private String status;
 
 }
