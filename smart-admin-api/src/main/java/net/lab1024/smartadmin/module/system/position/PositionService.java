@@ -129,8 +129,17 @@ public class PositionService {
      * @return
      */
     public ResponseDTO<PageResultDTO<PositionRelationResultDTO>> queryRelationByPage(PositionRelationQueryDTO queryDTO) {
+        if(queryDTO.getEmployeeId() <= 0){
+            queryDTO.setEmployeeId(null);
+        }
+        if(queryDTO.getPositionId() <= 0){
+            queryDTO.setPositionId(null);
+        }
+        if(queryDTO.getStatus() <= 0){
+            queryDTO.setStatus(null);
+        }
         Page page = SmartPageUtil.convert2QueryPage(queryDTO);
-        List<PositionRelationEntity> entityList = positionDao.selectRelByPage(page, queryDTO);
+        List<PositionRelationResultDTO> entityList = positionDao.selectRelByPage(page, queryDTO);
         page.setRecords(entityList.stream().map(e -> SmartBeanUtil.copy(e, PositionRelationResultDTO.class)).collect(Collectors.toList()));
         PageResultDTO<PositionRelationResultDTO> pageResultDTO = SmartPageUtil.convert2PageResult(page);
         return ResponseDTO.succData(pageResultDTO);
@@ -195,6 +204,7 @@ public class PositionService {
                     //成功加入
                     updateDTO.setJoinTime(new Date());
                     updateDTO.setStatus(PositionRelationTypeEnum.JOIN_SUCCESS.getValue());
+                    updateDTO.setJoinApproverID(SmartRequestTokenUtil.getRequestUser().getRequestUserId());
 
                     noticeAddDTO.setTitle("入团通知");
                     noticeAddDTO.setContent("恭喜你加入"+positionEntity.getPositionName()+"！");
@@ -218,12 +228,14 @@ public class PositionService {
                 if(updateDTO.getApplyResult()){
                     updateDTO.setExitTime(new Date());
                     updateDTO.setStatus(PositionRelationTypeEnum.EXIT_SUCCESS.getValue());
+                    updateDTO.setExitApproverID(SmartRequestTokenUtil.getRequestUser().getRequestUserId());
 
                     noticeAddDTO.setTitle("退团成功");
                     noticeAddDTO.setContent("您已退出"+positionEntity.getPositionName()+"！");
                     noticeService.addToUser(noticeAddDTO, updateDTO.getEmployeeId());
                 }else {
                     updateDTO.setStatus(PositionRelationTypeEnum.EXIT_FAIL.getValue());
+                    updateDTO.setExitApproverID(SmartRequestTokenUtil.getRequestUser().getRequestUserId());
 
                     noticeAddDTO.setTitle("退团失败");
                     noticeAddDTO.setContent("您的退出"+positionEntity.getPositionName()+"申请被拒绝。");

@@ -37,7 +37,7 @@ public class SwaggerTagConst {
 
         public static final String MANAGER_DATA_SCOPE = "管理端-数据范围";
 
-        public static final String MANAGER_JOB = "管理端-岗位";
+        public static final String MANAGER_JOB = "管理端-社团";//"管理端-岗位";
 
         public static final String MANAGER_NOTICE = "管理端-系统通知";
 

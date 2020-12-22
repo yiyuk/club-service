@@ -36,22 +36,28 @@ public interface PositionDao extends BaseMapper<PositionEntity> {
     PositionEntity selectPositionByID(@Param("id")Long id);
 
     /**
-     * 根据社团ID或用户ID 查询社团与用户关系
+     * 根据条件 查询社团与用户关系
      *
-     * @param positionRelationQueryDTO
+     * @param queryDTO
      * @return
      */
-    List<PositionRelationResultDTO> selectRelation(PositionRelationQueryDTO positionRelationQueryDTO);
+    List<PositionRelationResultDTO> selectRelation(@Param("queryDTO") PositionRelationQueryDTO queryDTO);
 
     /**
-     * 批量查询用户社团信息
+     * 批量查询多位用户社团信息
      * @param employeeIdList
      * @return
      */
     List<PositionRelationResultDTO> selectEmployeesRelation(@Param("employeeIdList") List<Long> employeeIdList);
 
-    List<PositionRelationEntity> selectRelByPage(Page page, @Param("queryDTO") PositionRelationQueryDTO queryDTO);
-
+    /**
+     * 根据条件查询用户社团关联信息
+     *
+     * @param page
+     * @param queryDTO
+     * @return
+     */
+    List<PositionRelationResultDTO> selectRelByPage(Page page, @Param("queryDTO") PositionRelationQueryDTO queryDTO);
     /**
      * 批量添加社团 用户 关联关系
      *

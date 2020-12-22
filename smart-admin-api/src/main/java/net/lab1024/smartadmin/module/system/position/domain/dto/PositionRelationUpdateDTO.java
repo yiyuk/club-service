@@ -1,5 +1,6 @@
 package net.lab1024.smartadmin.module.system.position.domain.dto;
 
+import com.fasterxml.jackson.annotation.JsonFormat;
 import io.swagger.annotations.ApiModelProperty;
 import lombok.Data;
 
@@ -24,7 +25,6 @@ public class PositionRelationUpdateDTO{
     private Long employeeId;
 
     @ApiModelProperty("关联状况")
-    @NotNull(message = "关联状况 不能为空")
     private Integer status;
 
     @ApiModelProperty("入社审批人ID")
@@ -37,12 +37,17 @@ public class PositionRelationUpdateDTO{
     private Boolean applyResult;
 
     @ApiModelProperty("入社时间")
+    @JsonFormat(pattern = "yyyy-MM-dd HH:mm:ss", timezone = "GMT+8")
     private Date joinTime;
 
     @ApiModelProperty("退社时间")
+    @JsonFormat(pattern = "yyyy-MM-dd HH:mm:ss", timezone = "GMT+8")
     private Date exitTime;
 
-    public PositionRelationUpdateDTO(@NotNull(message = "社团ID 不能为空") Long positionId, @NotNull(message = "用户ID 不能为空") Long employeeId, @NotNull(message = "关联状况 不能为空") Integer status, Long joinApproverID, Long exitApproverID, Boolean applyResult, Date joinTime, Date exitTime) {
+    public PositionRelationUpdateDTO() {
+    }
+
+    public PositionRelationUpdateDTO(@NotNull(message = "社团ID 不能为空") Long positionId, @NotNull(message = "用户ID 不能为空") Long employeeId, Integer status, Long joinApproverID, Long exitApproverID, Boolean applyResult, Date joinTime, Date exitTime) {
         this.positionId = positionId;
         this.employeeId = employeeId;
         this.status = status;

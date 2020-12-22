@@ -1,6 +1,7 @@
 package net.lab1024.smartadmin.module.system.position.domain.dto;
 
 import lombok.Data;
+import net.lab1024.smartadmin.common.domain.PageParamDTO;
 
 import java.util.Date;
 
@@ -10,7 +11,9 @@ import java.util.Date;
  * @author zzr
  */
 @Data
-public class PositionRelationResultDTO {
+public class PositionRelationResultDTO extends PageParamDTO {
+
+    private Long id;
 
     /**
      * 社团ID
@@ -26,6 +29,11 @@ public class PositionRelationResultDTO {
      * 社团名称
      */
     private String positionName;
+
+    /**
+     * 用户名称
+     */
+    private String actualName;
 
     /**
      * 更新时间
