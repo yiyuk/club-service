@@ -117,12 +117,12 @@ public class NoticeService {
         return ResponseDTO.succ();
     }
 
-    public ResponseDTO<String> addToUser(NoticeAddDTO addDTO, Long userID) {
+    public ResponseDTO<String> addAndSend(NoticeAddDTO addDTO, Long userID) {
         NoticeEntity entity = SmartBeanUtil.copy(addDTO, NoticeEntity.class);
         entity.setCreateTime(new Date());
         entity.setUpdateTime(new Date());
         entity.setCreateUser(userID);
-        entity.setSendStatus(JudgeEnum.NO.getValue());
+        entity.setSendStatus(JudgeEnum.YES.getValue());
         entity.setDeleted(JudgeEnum.NO.getValue());
         noticeDao.insert(entity);
         return ResponseDTO.succ();
@@ -198,7 +198,7 @@ public class NoticeService {
     }
 
     /**
-     * 发送系统通知 ，发送人不进行接收,需再事务外调用 以防止数据隔离级别不同造成未读消息数异常
+     * 发送系统通知 ，发送人不进行接收,需在事务外调用 以防止数据隔离级别不同造成未读消息数异常
      *
      * @param requestToken
      */

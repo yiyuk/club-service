@@ -15,6 +15,7 @@ import net.lab1024.smartadmin.util.SmartRequestTokenUtil;
 import org.apache.commons.collections.CollectionUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.text.SimpleDateFormat;
 import java.util.Date;
@@ -194,7 +195,14 @@ public class PositionService {
      * @param updateDTO
      * @return
      */
+    @Transactional
     public ResponseDTO<String> approvePositionRelation(PositionRelationUpdateDTO updateDTO){
+        //判断关联是否存在
+        List<PositionRelationResultDTO> dtoList = positionDao.selectRelation(SmartBeanUtil.copy(updateDTO,PositionRelationQueryDTO.class));
+        if (CollectionUtils.isEmpty(dtoList)) {
+            return ResponseDTO.wrap(PositionResponseCodeConst.RELATION_EXITS_DEFINE);
+        }
+
         PositionEntity positionEntity = positionDao.selectPositionByID(updateDTO.getPositionId());
         NoticeAddDTO noticeAddDTO = new NoticeAddDTO();
         PositionRelationTypeEnum positionRelationTypeEnum = PositionRelationTypeEnum.valueOf(this.getPosRelTypeByValue(updateDTO.getStatus()));
@@ -204,49 +212,42 @@ public class PositionService {
                     //成功加入
                     updateDTO.setJoinTime(new Date());
                     updateDTO.setStatus(PositionRelationTypeEnum.JOIN_SUCCESS.getValue());
-                    updateDTO.setJoinApproverID(SmartRequestTokenUtil.getRequestUser().getRequestUserId());
+                    updateDTO.setJoinApproverId((long) 1);//SmartRequestTokenUtil.getRequestUser().getRequestUserId());
 
                     noticeAddDTO.setTitle("入团通知");
                     noticeAddDTO.setContent("恭喜你加入"+positionEntity.getPositionName()+"！");
-                    noticeService.addToUser(noticeAddDTO, updateDTO.getEmployeeId());
 
                 }else {
                     //拒绝加入则删除关联
-//                    PositionRelationQueryDTO positionRelationQueryDTO = new PositionRelationQueryDTO();
-//                    positionRelationQueryDTO.setPositionId(updateDTO.getPositionId());
-//                    positionRelationQueryDTO.setEmployeeId(updateDTO.getEmployeeId());
                     PositionRelationQueryDTO positionRelationQueryDTO = SmartBeanUtil.copy(updateDTO,PositionRelationQueryDTO.class);
                     positionDao.deleteRelation(positionRelationQueryDTO);
 
                     //发送站内信
                     noticeAddDTO.setTitle("入团失败");
                     noticeAddDTO.setContent("您的加入"+positionEntity.getPositionName()+"申请被拒绝。");
-                    noticeService.addToUser(noticeAddDTO, updateDTO.getEmployeeId());
                 }
                 break;
             case EXIT_WAIT:
                 if(updateDTO.getApplyResult()){
                     updateDTO.setExitTime(new Date());
                     updateDTO.setStatus(PositionRelationTypeEnum.EXIT_SUCCESS.getValue());
-                    updateDTO.setExitApproverID(SmartRequestTokenUtil.getRequestUser().getRequestUserId());
+                    updateDTO.setExitApproverId(SmartRequestTokenUtil.getRequestUser().getRequestUserId());
 
                     noticeAddDTO.setTitle("退团成功");
                     noticeAddDTO.setContent("您已退出"+positionEntity.getPositionName()+"！");
-                    noticeService.addToUser(noticeAddDTO, updateDTO.getEmployeeId());
                 }else {
                     updateDTO.setStatus(PositionRelationTypeEnum.EXIT_FAIL.getValue());
-                    updateDTO.setExitApproverID(SmartRequestTokenUtil.getRequestUser().getRequestUserId());
+                    updateDTO.setExitApproverId(SmartRequestTokenUtil.getRequestUser().getRequestUserId());
 
                     noticeAddDTO.setTitle("退团失败");
                     noticeAddDTO.setContent("您的退出"+positionEntity.getPositionName()+"申请被拒绝。");
-                    noticeService.addToUser(noticeAddDTO, updateDTO.getEmployeeId());
                 }
                 break;
 
             default:
                 return ResponseDTO.wrap(PositionResponseCodeConst.UPDATE_RELATION_DEFINE);
         }
-
+        noticeService.addAndSend(noticeAddDTO, (long) 1);//SmartRequestTokenUtil.getRequestUser().getRequestUserId());
         positionDao.updateRelation(updateDTO);
         return ResponseDTO.succ();
     }

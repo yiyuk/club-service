@@ -13,6 +13,8 @@ public class PositionResponseCodeConst extends ResponseCodeConst {
 
     public static final PositionResponseCodeConst RELATION_STATUS_DEFINE = new PositionResponseCodeConst(13200, "关联状态错误");
 
+    public static final PositionResponseCodeConst RELATION_EXITS_DEFINE = new PositionResponseCodeConst(13300, "关联不存在");
+
     protected PositionResponseCodeConst(int code, String msg) {
         super(code, msg);
     }

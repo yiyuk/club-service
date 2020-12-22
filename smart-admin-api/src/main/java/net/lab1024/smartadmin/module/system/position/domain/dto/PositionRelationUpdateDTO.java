@@ -28,10 +28,10 @@ public class PositionRelationUpdateDTO{
     private Integer status;
 
     @ApiModelProperty("入社审批人ID")
-    private Long joinApproverID;
+    private Long joinApproverId;
 
     @ApiModelProperty("退社审批人ID")
-    private Long exitApproverID;
+    private Long exitApproverId;
 
     @ApiModelProperty("申请结果")
     private Boolean applyResult;
@@ -47,12 +47,12 @@ public class PositionRelationUpdateDTO{
     public PositionRelationUpdateDTO() {
     }
 
-    public PositionRelationUpdateDTO(@NotNull(message = "社团ID 不能为空") Long positionId, @NotNull(message = "用户ID 不能为空") Long employeeId, Integer status, Long joinApproverID, Long exitApproverID, Boolean applyResult, Date joinTime, Date exitTime) {
+    public PositionRelationUpdateDTO(@NotNull(message = "社团ID 不能为空") Long positionId, @NotNull(message = "用户ID 不能为空") Long employeeId, Integer status, Long joinApproverId, Long exitApproverId, Boolean applyResult, Date joinTime, Date exitTime) {
         this.positionId = positionId;
         this.employeeId = employeeId;
         this.status = status;
-        this.joinApproverID = joinApproverID;
-        this.exitApproverID = exitApproverID;
+        this.joinApproverId = joinApproverId;
+        this.exitApproverId = exitApproverId;
         this.applyResult = applyResult;
         this.joinTime = joinTime;
         this.exitTime = exitTime;

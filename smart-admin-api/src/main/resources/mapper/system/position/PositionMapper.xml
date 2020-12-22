@@ -75,7 +75,7 @@
     <select id="selectPositionByID" resultType="net.lab1024.smartadmin.module.system.position.domain.entity.PositionEntity">
         SELECT *
         FROM t_position
-        WHERE id = {id}
+        WHERE id = #{id}
     </select>
 
     <select id="selectRelation" resultType="net.lab1024.smartadmin.module.system.position.domain.dto.PositionRelationResultDTO">
@@ -156,17 +156,17 @@
     </delete>
 
     <update id="updateRelation">
-        UPDATE t_position_relation rel
+        UPDATE t_position_relation
         SET
-          rel.status = #{updateDTO.status},
-          rel.join_time = #{joinTime},
-          rel.join_approver_id = #{joinApproverId},
-          rel.exit_time = #{updateDTO.exitTime},
-          rel.exit_approver_id = #{updateDTO.exitApproverId}
+          status = #{updateDTO.status},
+          join_time = #{updateDTO.joinTime},
+          join_approver_id = #{updateDTO.joinApproverId},
+          exit_time = #{updateDTO.exitTime},
+          exit_approver_id = #{updateDTO.exitApproverId}
         WHERE
-          rel.position_id = #{updateDTO.positionId}
+          position_id = #{updateDTO.positionId}
         AND
-          rel.employee_id = #{updateDTO.employeeId}
+          employee_id = #{updateDTO.employeeId}
     </update>
 
 </mapper>

@@ -58,7 +58,7 @@ public class PositionRelationResultDTO extends PageParamDTO {
     /**
      * 入社审批人id
      */
-    private Long joinApproverID;
+    private Long joinApproverId;
 
     /**
      * 退社时间
@@ -68,6 +68,6 @@ public class PositionRelationResultDTO extends PageParamDTO {
     /**
      * 退社审批人id
      */
-    private Long exitApproverID;
+    private Long exitApproverId;
 
 }
