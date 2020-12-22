@@ -15,5 +15,7 @@ smart-admin-service
 #### 启动
 
 运行 smart-admin-api项目 SmartAdminApplication类
+
 访问：http://localhost:10086/smart-admin-api/swagger-ui.html
+
 显示swagger文档

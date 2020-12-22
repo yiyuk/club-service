@@ -3,6 +3,7 @@ package net.lab1024.smartadmin.module.system.position;
 import com.baomidou.mybatisplus.core.mapper.BaseMapper;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import net.lab1024.smartadmin.module.system.position.domain.dto.*;
+import net.lab1024.smartadmin.module.system.position.domain.entity.PositionApproveEntity;
 import net.lab1024.smartadmin.module.system.position.domain.entity.PositionEntity;
 import net.lab1024.smartadmin.module.system.position.domain.entity.PositionRelationEntity;
 import org.apache.ibatis.annotations.Mapper;
@@ -34,6 +35,38 @@ public interface PositionDao extends BaseMapper<PositionEntity> {
      * @return
      */
     PositionEntity selectPositionByID(@Param("id")Long id);
+
+    /**
+     * 查询社团审核状态
+     *
+     * @param id
+     * @return
+     */
+    PositionApproveResultDTO selectPositionApproveByID(@Param("id")Long id);
+
+    /**
+     * 查询社团审核状态
+     *
+     * @param queryDTO
+     * @return
+     */
+    List<PositionApproveResultDTO> selectPositionApprove(@Param("queryDTO")PositionApproveQueryDTO queryDTO);
+
+    /**
+     * 新建社团审核状态
+     *
+     * @param addDTO
+     * @return
+     */
+    Integer insertPositionApprove(@Param("addDTO")PositionApproveAddDTO addDTO);
+
+    /**
+     * 更新社团审核状态
+     *
+     * @param updateDTO
+     * @return
+     */
+    Integer updatePositionApprove(@Param("updateDTO")PositionApproveUpdateDTO updateDTO);
 
     /**
      * 根据条件 查询社团与用户关系

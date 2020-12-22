@@ -6,6 +6,7 @@ import net.lab1024.smartadmin.common.domain.ResponseDTO;
 import net.lab1024.smartadmin.module.business.notice.NoticeService;
 import net.lab1024.smartadmin.module.business.notice.domain.dto.NoticeAddDTO;
 import net.lab1024.smartadmin.module.system.position.domain.dto.*;
+import net.lab1024.smartadmin.module.system.position.domain.entity.PositionApproveEntity;
 import net.lab1024.smartadmin.module.system.position.domain.entity.PositionEntity;
 import net.lab1024.smartadmin.module.system.position.domain.entity.PositionRelationEntity;
 import net.lab1024.smartadmin.module.system.privilege.constant.PrivilegeTypeEnum;
@@ -13,6 +14,7 @@ import net.lab1024.smartadmin.util.SmartBeanUtil;
 import net.lab1024.smartadmin.util.SmartPageUtil;
 import net.lab1024.smartadmin.util.SmartRequestTokenUtil;
 import org.apache.commons.collections.CollectionUtils;
+import org.apache.ibatis.annotations.Param;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -122,6 +124,68 @@ public class PositionService {
         positionDao.deleteById(id);
         return ResponseDTO.succ();
     }
+
+    /**
+     * 查询社团审核状态
+     *
+     * @param id
+     * @return
+     */
+    public ResponseDTO<PositionApproveResultDTO> queryPositionApproveByID(Long id){
+        return ResponseDTO.succData(positionDao.selectPositionApproveByID(id));
+    }
+
+    /**
+     * 查询社团审核状态
+     *
+     * @param queryDTO
+     * @return
+     */
+    public ResponseDTO<List<PositionApproveResultDTO>> queryPositionApprove(PositionApproveQueryDTO queryDTO){
+        List<PositionApproveResultDTO> list = positionDao.selectPositionApprove(queryDTO);
+        return ResponseDTO.succData(list);
+    }
+
+    /**
+     * 添加社团审核状态
+     *
+     * @param addDTO
+     * @return
+     */
+     public ResponseDTO<String> addPositionApprove(PositionApproveAddDTO addDTO){
+         addDTO.setEmployeeId(SmartRequestTokenUtil.getRequestUser().getRequestUserId());
+         positionDao.insertPositionApprove(addDTO);
+         return ResponseDTO.succ();
+     };
+
+    /**
+     * 更新社团审核状态
+     *
+     * @param updateDTO
+     * @return
+     */
+    @Transactional
+    public ResponseDTO<String> updatePositionApprove(PositionApproveUpdateDTO updateDTO){
+        NoticeAddDTO noticeAddDTO = new NoticeAddDTO();
+        String positionName = positionDao.selectPositionApproveByID(updateDTO.getId()).getPositionName();
+        if(updateDTO.getApprove_result()){
+            updateDTO.setStatus(PositionApproveTypeEnum.SUCCESS.getValue());
+            //新建社团
+            PositionApproveResultDTO resultDTO = positionDao.selectPositionApproveByID(updateDTO.getId());
+            positionDao.insert(SmartBeanUtil.copy(resultDTO,PositionEntity.class));
+            //发送站内信
+            noticeAddDTO.setTitle("创建社团成功");
+            noticeAddDTO.setContent("您的创建"+positionName+"申请已通过！");
+        }else {
+            updateDTO.setStatus(PositionApproveTypeEnum.FAIL.getValue());
+            //发送站内信
+            noticeAddDTO.setTitle("创建社团失败");
+            noticeAddDTO.setContent("您的创建"+positionName+"申请被拒绝。");
+        }
+        noticeService.addAndSend(noticeAddDTO, SmartRequestTokenUtil.getRequestUser().getRequestUserId());
+        positionDao.updatePositionApprove(updateDTO);
+        return ResponseDTO.succ();
+    };
 
     /**
      * 根据社团Id查询关联信息
@@ -247,7 +311,7 @@ public class PositionService {
             default:
                 return ResponseDTO.wrap(PositionResponseCodeConst.UPDATE_RELATION_DEFINE);
         }
-        noticeService.addAndSend(noticeAddDTO, (long) 1);//SmartRequestTokenUtil.getRequestUser().getRequestUserId());
+        noticeService.addAndSend(noticeAddDTO, SmartRequestTokenUtil.getRequestUser().getRequestUserId());
         positionDao.updateRelation(updateDTO);
         return ResponseDTO.succ();
     }

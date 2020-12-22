@@ -78,6 +78,46 @@
         WHERE id = #{id}
     </select>
 
+    <select id="selectPositionApproveByID" resultType="net.lab1024.smartadmin.module.system.position.domain.dto.PositionApproveResultDTO">
+        SELECT *
+        FROM t_position_approve
+        WHERE id = #{id}
+    </select>
+
+    <select id="selectPositionApprove" resultType="net.lab1024.smartadmin.module.system.position.domain.dto.PositionApproveResultDTO">
+        SELECT
+        *
+        FROM
+        t_position_approve rel
+        <where>
+            TRUE
+            <if test="queryDTO.approverId != null">
+                AND rel.approver_id = #{queryDTO.approverId}
+            </if>
+            <if test="queryDTO.employeeId != null">
+                AND rel.employee_id = #{queryDTO.employeeId}
+            </if>
+            <if test="queryDTO.status != null">
+                AND rel.status = #{queryDTO.status}
+            </if>
+        </where>
+    </select>
+
+    <insert id="insertPositionApprove">
+        INSERT INTO t_position_approve (position_name,remark,status, employee_id,update_time, create_time) VALUES
+            (#{addDTO.positionName},#{addDTO.remark},1,#{addDTO.employeeId},now(), now())
+    </insert>
+
+    <update id="updatePositionApprove">
+        UPDATE t_position_approve
+        SET
+          status = #{updateDTO.status},
+          approver_id = #{updateDTO.approverId},
+          update_time = now()
+        WHERE
+          id = #{updateDTO.id}
+    </update>
+
     <select id="selectRelation" resultType="net.lab1024.smartadmin.module.system.position.domain.dto.PositionRelationResultDTO">
         SELECT
         job.position_name,
