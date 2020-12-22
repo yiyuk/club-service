@@ -22,7 +22,7 @@ public class EmployeeUpdateDTO extends EmployeeBaseDTO {
     @ApiModelProperty("密码")
     private String loginPwd;
 
-    @ApiModelProperty("岗位ID 集合")
-    private List<Long> positionIdList;
+//    @ApiModelProperty("岗位ID 集合")
+//    private List<Long> positionIdList;
 
 }

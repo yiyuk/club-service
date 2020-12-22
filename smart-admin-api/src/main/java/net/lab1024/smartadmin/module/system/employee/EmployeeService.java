@@ -17,6 +17,7 @@ import net.lab1024.smartadmin.module.business.login.domain.RequestTokenBO;
 import net.lab1024.smartadmin.module.system.position.PositionDao;
 import net.lab1024.smartadmin.module.system.position.PositionService;
 import net.lab1024.smartadmin.module.system.position.domain.dto.PositionRelationAddDTO;
+import net.lab1024.smartadmin.module.system.position.domain.dto.PositionRelationQueryDTO;
 import net.lab1024.smartadmin.module.system.position.domain.dto.PositionRelationResultDTO;
 import net.lab1024.smartadmin.module.system.privilege.service.PrivilegeEmployeeService;
 import net.lab1024.smartadmin.module.system.role.roleemployee.RoleEmployeeDao;
@@ -91,6 +92,11 @@ public class EmployeeService {
         return employeeBO;
     }
 
+    public ResponseDTO<EmployeeDTO> getEmployeeById(Long id) {
+        EmployeeDTO employeeDTO = employeeDao.getEmployeeById(id);
+        return ResponseDTO.succData(employeeDTO);
+    }
+
     /**
      * 查询员工列表
      *
@@ -99,32 +105,32 @@ public class EmployeeService {
      */
     public ResponseDTO<PageResultDTO<EmployeeVO>> selectEmployeeList(EmployeeQueryDTO queryDTO) {
         Page pageParam = SmartPageUtil.convert2QueryPage(queryDTO);
-        queryDTO.setIsDelete(JudgeEnum.NO.getValue());
+        //queryDTO.setIsDelete(JudgeEnum.NO.getValue());
         List<EmployeeDTO> employeeList = employeeDao.selectEmployeeList(pageParam, queryDTO);
         List<Long> employeeIdList = employeeList.stream().map(EmployeeDTO::getId).collect(Collectors.toList());
 
-        if (CollectionUtils.isNotEmpty(employeeIdList)) {
-            List<PositionRelationResultDTO> positionRelationResultDTOList = positionDao.selectEmployeesRelation(employeeIdList);
-            Map<Long, List<PositionRelationResultDTO>> employeePositionMap = new HashedMap();
-
-            for (PositionRelationResultDTO positionRelationResultDTO : positionRelationResultDTOList) {
-                List<PositionRelationResultDTO> relationResultDTOList = employeePositionMap.get(positionRelationResultDTO.getEmployeeId());
-                //匹配对应的岗位
-                if (relationResultDTOList == null) {
-                    relationResultDTOList = new ArrayList<>();
-                    employeePositionMap.put(positionRelationResultDTO.getEmployeeId(), relationResultDTOList);
-                }
-                relationResultDTOList.add(positionRelationResultDTO);
-            }
-
-            for (EmployeeDTO employeeDTO : employeeList) {
-                List<PositionRelationResultDTO> relationResultDTOList = employeePositionMap.get(employeeDTO.getId());
-                if(relationResultDTOList != null){
-                    employeeDTO.setPositionRelationList(relationResultDTOList);
-                    employeeDTO.setPositionName(relationResultDTOList.stream().map(PositionRelationResultDTO::getPositionName).collect(Collectors.joining(",")));
-                }
-            }
-        }
+//        if (CollectionUtils.isNotEmpty(employeeIdList)) {
+//            List<PositionRelationResultDTO> positionRelationResultDTOList = positionDao.selectEmployeesRelation(employeeIdList);
+//            Map<Long, List<PositionRelationResultDTO>> employeePositionMap = new HashedMap();
+//
+//            for (PositionRelationResultDTO positionRelationResultDTO : positionRelationResultDTOList) {
+//                List<PositionRelationResultDTO> relationResultDTOList = employeePositionMap.get(positionRelationResultDTO.getEmployeeId());
+//                //匹配对应的岗位
+//                if (relationResultDTOList == null) {
+//                    relationResultDTOList = new ArrayList<>();
+//                    employeePositionMap.put(positionRelationResultDTO.getEmployeeId(), relationResultDTOList);
+//                }
+//                relationResultDTOList.add(positionRelationResultDTO);
+//            }
+//
+//            for (EmployeeDTO employeeDTO : employeeList) {
+//                List<PositionRelationResultDTO> relationResultDTOList = employeePositionMap.get(employeeDTO.getId());
+//                if(relationResultDTOList != null){
+//                    employeeDTO.setPositionRelationList(relationResultDTOList);
+//                    employeeDTO.setPositionName(relationResultDTOList.stream().map(PositionRelationResultDTO::getPositionName).collect(Collectors.joining(",")));
+//                }
+//            }
+//        }
         return ResponseDTO.succData(SmartPageUtil.convert2PageResult(pageParam, employeeList, EmployeeVO.class));
     }
 
@@ -137,18 +143,18 @@ public class EmployeeService {
      */
     public ResponseDTO<String> addEmployee(EmployeeAddDTO employeeAddDto, RequestTokenBO requestToken) {
         EmployeeEntity entity = SmartBeanUtil.copy(employeeAddDto, EmployeeEntity.class);
-        if (StringUtils.isNotEmpty(employeeAddDto.getIdCard())) {
-            boolean checkResult = Pattern.matches(SmartVerificationUtil.ID_CARD, employeeAddDto.getIdCard());
-            if (!checkResult) {
-                return ResponseDTO.wrap(EmployeeResponseCodeConst.ID_CARD_ERROR);
-            }
-        }
-        if (StringUtils.isNotEmpty(employeeAddDto.getBirthday())) {
-            boolean checkResult = Pattern.matches(SmartVerificationUtil.DATE, employeeAddDto.getBirthday());
-            if (!checkResult) {
-                return ResponseDTO.wrap(EmployeeResponseCodeConst.BIRTHDAY_ERROR);
-            }
-        }
+//        if (StringUtils.isNotEmpty(employeeAddDto.getIdCard())) {
+//            boolean checkResult = Pattern.matches(SmartVerificationUtil.ID_CARD, employeeAddDto.getIdCard());
+//            if (!checkResult) {
+//                return ResponseDTO.wrap(EmployeeResponseCodeConst.ID_CARD_ERROR);
+//            }
+//        }
+//        if (StringUtils.isNotEmpty(employeeAddDto.getBirthday())) {
+//            boolean checkResult = Pattern.matches(SmartVerificationUtil.DATE, employeeAddDto.getBirthday());
+//            if (!checkResult) {
+//                return ResponseDTO.wrap(EmployeeResponseCodeConst.BIRTHDAY_ERROR);
+//            }
+//        }
         //同名员工
         EmployeeDTO sameNameEmployee = employeeDao.getByLoginName(entity.getLoginName(), EmployeeStatusEnum.NORMAL.getValue());
         if (null != sameNameEmployee) {
@@ -159,11 +165,11 @@ public class EmployeeService {
         if (null != samePhoneEmployee) {
             return ResponseDTO.wrap(EmployeeResponseCodeConst.PHONE_EXISTS);
         }
-        Long departmentId = entity.getDepartmentId();
-        DepartmentEntity department = departmentDao.selectById(departmentId);
-        if (department == null) {
-            return ResponseDTO.wrap(EmployeeResponseCodeConst.DEPT_NOT_EXIST);
-        }
+//        Long departmentId = entity.getDepartmentId();
+//        DepartmentEntity department = departmentDao.selectById(departmentId);
+//        if (department == null) {
+//            return ResponseDTO.wrap(EmployeeResponseCodeConst.DEPT_NOT_EXIST);
+//        }
 
         //如果没有密码  默认设置为123456
         String pwd = entity.getLoginPwd();
@@ -173,15 +179,15 @@ public class EmployeeService {
             entity.setLoginPwd(SmartDigestUtil.encryptPassword(CommonConst.Password.SALT_FORMAT, entity.getLoginPwd()));
         }
 
-        entity.setCreateUser(requestToken.getRequestUserId());
+        entity.setCreateUser((long) 1);//TODO requestToken.getRequestUserId());
         if (StringUtils.isEmpty(entity.getBirthday())) {
             entity.setBirthday(null);
         }
         employeeDao.insert(entity);
 
-        PositionRelationAddDTO positionRelAddDTO = new PositionRelationAddDTO(employeeAddDto.getPositionIdList(), entity.getId());
-        //存储所选岗位信息
-        positionService.addPositionRelation(positionRelAddDTO);
+//        PositionRelationAddDTO positionRelAddDTO = new PositionRelationAddDTO(employeeAddDto.getPositionIdList(), entity.getId());
+//        //存储所选岗位信息
+//        positionService.addPositionRelation(positionRelAddDTO);
 
         return ResponseDTO.succ();
     }
@@ -234,23 +240,23 @@ public class EmployeeService {
         if (null == employeeEntity) {
             return ResponseDTO.wrap(EmployeeResponseCodeConst.EMP_NOT_EXISTS);
         }
-        if (StringUtils.isNotBlank(updateDTO.getIdCard())) {
-            boolean checkResult = Pattern.matches(SmartVerificationUtil.ID_CARD, updateDTO.getIdCard());
-            if (!checkResult) {
-                return ResponseDTO.wrap(EmployeeResponseCodeConst.ID_CARD_ERROR);
-            }
-        }
-        if (StringUtils.isNotEmpty(updateDTO.getBirthday())) {
-            boolean checkResult = Pattern.matches(SmartVerificationUtil.DATE, updateDTO.getBirthday());
-            if (!checkResult) {
-                return ResponseDTO.wrap(EmployeeResponseCodeConst.BIRTHDAY_ERROR);
-            }
-        }
-        Long departmentId = updateDTO.getDepartmentId();
-        DepartmentEntity departmentEntity = departmentDao.selectById(departmentId);
-        if (departmentEntity == null) {
-            return ResponseDTO.wrap(EmployeeResponseCodeConst.DEPT_NOT_EXIST);
-        }
+//        if (StringUtils.isNotBlank(updateDTO.getIdCard())) {
+//            boolean checkResult = Pattern.matches(SmartVerificationUtil.ID_CARD, updateDTO.getIdCard());
+//            if (!checkResult) {
+//                return ResponseDTO.wrap(EmployeeResponseCodeConst.ID_CARD_ERROR);
+//            }
+//        }
+//        if (StringUtils.isNotEmpty(updateDTO.getBirthday())) {
+//            boolean checkResult = Pattern.matches(SmartVerificationUtil.DATE, updateDTO.getBirthday());
+//            if (!checkResult) {
+//                return ResponseDTO.wrap(EmployeeResponseCodeConst.BIRTHDAY_ERROR);
+//            }
+//        }
+//        Long departmentId = updateDTO.getDepartmentId();
+//        DepartmentEntity departmentEntity = departmentDao.selectById(departmentId);
+//        if (departmentEntity == null) {
+//            return ResponseDTO.wrap(EmployeeResponseCodeConst.DEPT_NOT_EXIST);
+//        }
         EmployeeDTO sameNameEmployee = employeeDao.getByLoginName(updateDTO.getLoginName(), EmployeeStatusEnum.NORMAL.getValue());
         if (null != sameNameEmployee && !sameNameEmployee.getId().equals(employeeId)) {
             return ResponseDTO.wrap(EmployeeResponseCodeConst.LOGIN_NAME_EXISTS);
@@ -267,17 +273,17 @@ public class EmployeeService {
         }
         EmployeeEntity entity = SmartBeanUtil.copy(updateDTO, EmployeeEntity.class);
         entity.setUpdateTime(new Date());
-        if (StringUtils.isEmpty(entity.getBirthday())) {
-            entity.setBirthday(null);
-        }
-        if (CollectionUtils.isNotEmpty(updateDTO.getPositionIdList())) {
-            //删除旧的关联关系 添加新的关联关系
-            positionService.removePositionRelation(entity.getId());
-            PositionRelationAddDTO positionRelAddDTO = new PositionRelationAddDTO(updateDTO.getPositionIdList(), entity.getId());
-            positionService.addPositionRelation(positionRelAddDTO);
-        }
-        entity.setIsDisabled(employeeEntity.getIsDisabled());
-        entity.setIsLeave(employeeEntity.getIsLeave());
+//        if (StringUtils.isEmpty(entity.getBirthday())) {
+//            entity.setBirthday(null);
+//        }
+//        if (CollectionUtils.isNotEmpty(updateDTO.getPositionIdList())) {
+//            //删除旧的关联关系 添加新的关联关系
+//            positionService.removePositionRelation(entity.getId());
+//            PositionRelationAddDTO positionRelAddDTO = new PositionRelationAddDTO(updateDTO.getPositionIdList(), entity.getId());
+//            positionService.addPositionRelation(positionRelAddDTO);
+//        }
+//        entity.setIsDisabled(employeeEntity.getIsDisabled());
+//        entity.setIsLeave(employeeEntity.getIsLeave());
         entity.setCreateUser(employeeEntity.getCreateUser());
         entity.setCreateTime(employeeEntity.getCreateTime());
         entity.setUpdateTime(new Date());
@@ -297,9 +303,21 @@ public class EmployeeService {
         if (null == employeeEntity) {
             return ResponseDTO.wrap(EmployeeResponseCodeConst.EMP_NOT_EXISTS);
         }
+        //真删
+        employeeDao.deleteById(employeeId);
         //假删
-        employeeEntity.setIsDelete(JudgeEnum.YES.getValue().longValue());
-        employeeDao.updateById(employeeEntity);
+//        employeeEntity.setIsDelete(JudgeEnum.YES.getValue().longValue());
+//        employeeDao.updateById(employeeEntity);
+
+        //删除社团关联表相关内容
+        PositionRelationQueryDTO positionRelationQueryDTO = new PositionRelationQueryDTO();
+        positionRelationQueryDTO.setEmployeeId(employeeId);
+        List<PositionRelationResultDTO> dtoList = positionDao.selectRelation(positionRelationQueryDTO);
+        if (CollectionUtils.isNotEmpty(dtoList)) {
+            for (PositionRelationResultDTO resultDTO:dtoList ) {
+                positionDao.deleteRelationByPositionId(resultDTO.getPositionId());
+            }
+        }
         employeeCache.remove(employeeId);
         return ResponseDTO.succ();
     }

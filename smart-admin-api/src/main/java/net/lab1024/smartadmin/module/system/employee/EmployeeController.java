@@ -1,5 +1,6 @@
 package net.lab1024.smartadmin.module.system.employee;
 
+import net.lab1024.smartadmin.common.anno.NoNeedLogin;
 import net.lab1024.smartadmin.common.anno.NoValidPrivilege;
 import net.lab1024.smartadmin.common.anno.OperateLog;
 import net.lab1024.smartadmin.common.domain.PageResultDTO;
@@ -31,51 +32,58 @@ public class EmployeeController {
     @Autowired
     private EmployeeService employeeService;
 
+
     @PostMapping("/employee/query")
-    @ApiOperation(value = "员工管理查询", notes = "员工管理查询 @author lidoudou")
+    @ApiOperation(value = "用户分页查询", notes = "用户分页查询 @author hxy")
     public ResponseDTO<PageResultDTO<EmployeeVO>> query(@RequestBody EmployeeQueryDTO query) {
         return employeeService.selectEmployeeList(query);
     }
 
+    @GetMapping("/employee/query/{id}")
+    @ApiOperation(value = "用户查询", notes = "用户查询 @author hxy")
+    public ResponseDTO<EmployeeDTO> queryById(@PathVariable Long id) {
+        return employeeService.getEmployeeById(id);
+    }
+
     @GetMapping("/employee/get/all")
-    @ApiOperation(value = "查询所有员工基本信息，用于选择框", notes = "查询所有员工基本信息，用于选择框")
+    @ApiOperation(value = "查询所有用户基本信息，用于选择框", notes = "查询所有用户基本信息，用于选择框 @author hxy")
     @NoValidPrivilege
     public ResponseDTO<List<EmployeeVO>> getAll() {
         return ResponseDTO.succData(employeeService.getAllEmployee());
     }
 
-    @ApiOperation(value = "添加员工", notes = "@author yandanyang")
+    @ApiOperation(value = "添加用户", notes = "@author yandanyang")
     @PostMapping("/employee/add")
     public ResponseDTO<String> addEmployee(@Valid @RequestBody EmployeeAddDTO emp) {
         RequestTokenBO requestToken = SmartRequestTokenUtil.getRequestUser();
         return employeeService.addEmployee(emp, requestToken);
     }
 
-    @ApiOperation(value = "禁用单个员工", notes = "@author yandanyang")
-    @GetMapping("/employee/updateStatus/{employeeId}/{status}")
-    public ResponseDTO<String> updateStatus(@PathVariable("employeeId") Long employeeId, @PathVariable("status") Integer status) {
-        return employeeService.updateStatus(employeeId, status);
-    }
+//    @ApiOperation(value = "禁用单个员工", notes = "@author yandanyang")
+//    @GetMapping("/employee/updateStatus/{employeeId}/{status}")
+//    public ResponseDTO<String> updateStatus(@PathVariable("employeeId") Long employeeId, @PathVariable("status") Integer status) {
+//        return employeeService.updateStatus(employeeId, status);
+//    }
+//
+//    @ApiOperation(value = "批量禁用", notes = "@author yandanyang")
+//    @PostMapping("/employee/batchUpdateStatus")
+//    public ResponseDTO<String> batchUpdateStatus(@Valid @RequestBody EmployeeBatchUpdateStatusDTO batchUpdateStatusDTO) {
+//        return employeeService.batchUpdateStatus(batchUpdateStatusDTO);
+//    }
 
-    @ApiOperation(value = "批量禁用", notes = "@author yandanyang")
-    @PostMapping("/employee/batchUpdateStatus")
-    public ResponseDTO<String> batchUpdateStatus(@Valid @RequestBody EmployeeBatchUpdateStatusDTO batchUpdateStatusDTO) {
-        return employeeService.batchUpdateStatus(batchUpdateStatusDTO);
-    }
-
-    @ApiOperation(value = "更新员工信息", notes = "@author yandanyang")
+    @ApiOperation(value = "更新用户信息", notes = "@author yandanyang")
     @PostMapping("/employee/update")
     public ResponseDTO<String> updateEmployee(@Valid @RequestBody EmployeeUpdateDTO employeeUpdateDto) {
         return employeeService.updateEmployee(employeeUpdateDto);
     }
 
-    @ApiOperation(value = "删除员工信息", notes = "@author yandanyang")
+    @ApiOperation(value = "删除用户信息", notes = "@author yandanyang")
     @PostMapping("/employee/delete/{employeeId}")
     public ResponseDTO<String> deleteEmployeeById(@PathVariable("employeeId") Long employeeId) {
         return employeeService.deleteEmployeeById(employeeId);
     }
 
-    @ApiOperation(value = "单个员工角色授权", notes = "@author yandanyang")
+    @ApiOperation(value = "单个用户角色授权", notes = "@author yandanyang")
     @PostMapping("/employee/updateRoles")
     public ResponseDTO<String> updateRoles(@Valid @RequestBody EmployeeUpdateRolesDTO updateRolesDTO) {
         return employeeService.updateRoles(updateRolesDTO);
@@ -86,18 +94,17 @@ public class EmployeeController {
     public ResponseDTO<String> updatePwd(@Valid @RequestBody EmployeeUpdatePwdDTO updatePwdDTO) {
         RequestTokenBO requestToken = SmartRequestTokenUtil.getRequestUser();
         return employeeService.updatePwd(updatePwdDTO, requestToken);
-//        return ResponseDTO.succ();
     }
 
-    @ApiOperation(value = "通过部门id获取当前部门的人员&没有部门的人", notes = "@author yandanyang")
-    @GetMapping("/employee/listEmployeeByDeptId/{deptId}")
-    public ResponseDTO<List<EmployeeVO>> listEmployeeByDeptId(@PathVariable Long deptId) {
-        return employeeService.getEmployeeByDeptId(deptId);
-    }
+//    @ApiOperation(value = "通过部门id获取当前部门的人员&没有部门的人", notes = "@author yandanyang")
+//    @GetMapping("/employee/listEmployeeByDeptId/{deptId}")
+//    public ResponseDTO<List<EmployeeVO>> listEmployeeByDeptId(@PathVariable Long deptId) {
+//        return employeeService.getEmployeeByDeptId(deptId);
+//    }
 
-    @ApiOperation(value = "员工重置密码", notes = "@author lizongliang")
-    @GetMapping("/employee/resetPasswd/{employeeId}")
-    public ResponseDTO resetPasswd(@PathVariable("employeeId") Integer employeeId) {
+    @ApiOperation(value = "用户重置密码", notes = "@author lizongliang")
+    @GetMapping("/employee/resetPassword/{employeeId}")
+    public ResponseDTO resetPassword(@PathVariable("employeeId") Integer employeeId) {
         return employeeService.resetPasswd(employeeId);
     }
 

@@ -14,12 +14,12 @@ public class EmployeeResponseCodeConst extends ResponseCodeConst {
     /**
      * 员工不存在
      */
-    public static final EmployeeResponseCodeConst EMP_NOT_EXISTS = new EmployeeResponseCodeConst(3001, "员工不存在！");
+    public static final EmployeeResponseCodeConst EMP_NOT_EXISTS = new EmployeeResponseCodeConst(3001, "用户不存在！");
 
     /**
      * 更新员工信息失败
      */
-    public static final EmployeeResponseCodeConst UPDATE_FAILED = new EmployeeResponseCodeConst(3002, "员工更新失败！");
+    public static final EmployeeResponseCodeConst UPDATE_FAILED = new EmployeeResponseCodeConst(3002, "用户更新失败！");
 
     /**
      * 部门信息不存在

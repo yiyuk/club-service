@@ -179,5 +179,13 @@
         WHERE id = #{employeeId}
     </update>
 
+    <select id="selectAll" resultMap="EmployeeVO">
+        SELECT
+        <include refid="baseSql"></include>
+        FROM
+        t_employee e
+    </select>
+
+
 
 </mapper>
