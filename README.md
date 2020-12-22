@@ -4,7 +4,7 @@
 
 smart-admin-service
 
-将两个项目导入idea
+以maven项目导入idea
 
 #### 创建数据库
 

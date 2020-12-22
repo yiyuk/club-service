@@ -48,6 +48,8 @@ public class SwaggerTagConst {
         public static final String MANAGER_EMAIL = "通用-邮件发送";
 
         public static final String MANAGER_HEART_BEAT = "通用-心跳服务";
+
+        public static final String COMMON_NEWS = "通用-新闻";
     }
 
     /**

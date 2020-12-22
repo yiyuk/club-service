@@ -64,6 +64,7 @@ public class PositionService {
      * @param queryDTO
      * @return
      */
+    @Transactional(rollbackFor = Exception.class)
     public ResponseDTO<PageResultDTO<PositionResultVO>> queryPositionByPage(PositionQueryDTO queryDTO) {
         Page page = SmartPageUtil.convert2QueryPage(queryDTO);
         List<PositionEntity> entityList = positionDao.selectByPage(page, queryDTO);
@@ -78,6 +79,7 @@ public class PositionService {
      * @param addDTO
      * @return
      */
+    @Transactional(rollbackFor = Exception.class)
     public ResponseDTO<String> addPosition(PositionAddDTO addDTO) {
         PositionEntity positionEntity = SmartBeanUtil.copy(addDTO, PositionEntity.class);
         positionDao.insert(positionEntity);
@@ -90,6 +92,7 @@ public class PositionService {
      * @param updateDTO
      * @return
      */
+    @Transactional(rollbackFor = Exception.class)
     public ResponseDTO<String> updatePosition(PositionUpdateDTO updateDTO) {
         PositionEntity positionEntity = SmartBeanUtil.copy(updateDTO, PositionEntity.class);
         positionDao.updateById(positionEntity);
@@ -164,7 +167,7 @@ public class PositionService {
      * @param updateDTO
      * @return
      */
-    @Transactional
+    @Transactional(rollbackFor = Exception.class)
     public ResponseDTO<String> updatePositionApprove(PositionApproveUpdateDTO updateDTO){
         NoticeAddDTO noticeAddDTO = new NoticeAddDTO();
         String positionName = positionDao.selectPositionApproveByID(updateDTO.getId()).getPositionName();
@@ -227,6 +230,7 @@ public class PositionService {
      * @param updateDTO
      * @return
      */
+    @Transactional(rollbackFor = Exception.class)
     public ResponseDTO<String> applyPositionRelation(PositionRelationUpdateDTO updateDTO) {
         //查询是否存在相关的社团关联
         List<PositionRelationResultDTO> dtoList = positionDao.selectRelation(SmartBeanUtil.copy(updateDTO,PositionRelationQueryDTO.class));
@@ -259,7 +263,7 @@ public class PositionService {
      * @param updateDTO
      * @return
      */
-    @Transactional
+    @Transactional(rollbackFor = Exception.class)
     public ResponseDTO<String> approvePositionRelation(PositionRelationUpdateDTO updateDTO){
         //判断关联是否存在
         List<PositionRelationResultDTO> dtoList = positionDao.selectRelation(SmartBeanUtil.copy(updateDTO,PositionRelationQueryDTO.class));

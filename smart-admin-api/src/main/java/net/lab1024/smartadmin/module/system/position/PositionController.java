@@ -1,6 +1,5 @@
 package net.lab1024.smartadmin.module.system.position;
 
-import io.swagger.annotations.ApiModelProperty;
 import net.lab1024.smartadmin.common.anno.NoNeedLogin;
 import net.lab1024.smartadmin.common.anno.OperateLog;
 import net.lab1024.smartadmin.common.domain.PageResultDTO;

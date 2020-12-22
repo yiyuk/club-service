@@ -1,0 +1,81 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="net.lab1024.smartadmin.module.business.news.NewsDao">
+
+    <resultMap id="NewsEntity" type="net.lab1024.smartadmin.module.business.news.domain.entity.NewsEntity"></resultMap>
+
+    <resultMap id="NewsResultDTO" type="net.lab1024.smartadmin.module.business.news.domain.dto.NewsResultDTO"></resultMap>
+
+    <select id="queryByPage" resultMap="NewsResultDTO">
+        select
+            news.id,
+            news.news_title,
+            news.news_text,
+            news.position_id,
+            news.author_id,
+            news.employee_id,
+            news.status,
+            news.update_time,
+            news.create_time,
+
+            users.actual_name,
+            pos.position_name
+        from t_news news, t_employee users, t_position pos
+        <where>
+            news.author_id = users.id
+            AND news.position_id = pos.id
+            <if test="queryDTO.employeeId != null">
+                AND news.employee_id = #{queryDTO.employeeId}
+            </if>
+            <if test="queryDTO.authorId != null">
+                AND news.author_id = #{queryDTO.authorId}
+            </if>
+            <if test="queryDTO.positionId != null">
+                AND news.position_id = #{queryDTO.positionId}
+            </if>
+            <if test="queryDTO.authorId != null">
+                AND news.author_id = #{queryDTO.authorId}
+            </if>
+            <if test="queryDTO.newsTitle != null and queryDTO.newsTitle != ''">
+                AND INSTR(news.news_title,#{queryDTO.newsTitle})
+            </if>
+            <if test="queryDTO.status != null">
+                AND news.status = #{queryDTO.status}
+            </if>
+        </where>
+    </select>
+
+    <delete id="deleteById">
+        delete from t_news where id = #{id}
+    </delete>
+
+    <select id="queryNewsById" resultMap="NewsResultDTO">
+        select
+        news.id,
+        news.news_title,
+        news.news_text,
+        news.position_id,
+        news.author_id,
+        news.employee_id,
+        news.status,
+        news.update_time,
+        news.create_time,
+
+        users.actual_name,
+        pos.position_name
+        from t_news news, t_employee users, t_position pos
+        <where>
+            news.author_id = users.id
+            AND news.position_id = pos.id
+            AND news.id = #{id}
+        </where>
+    </select>
+
+    <delete id="deleteByIds">
+        delete from t_news where id in
+        <foreach collection="idList" open="(" close=")" separator="," item="item">
+            #{item}
+        </foreach>
+    </delete>
+
+</mapper>
