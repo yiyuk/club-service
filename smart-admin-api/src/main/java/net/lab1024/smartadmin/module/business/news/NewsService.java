@@ -10,6 +10,7 @@ import net.lab1024.smartadmin.module.business.news.domain.dto.NewsUpdateDTO;
 import net.lab1024.smartadmin.module.business.news.domain.entity.NewsEntity;
 import net.lab1024.smartadmin.util.SmartBeanUtil;
 import net.lab1024.smartadmin.util.SmartPageUtil;
+import net.lab1024.smartadmin.util.SmartRequestTokenUtil;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -49,6 +50,7 @@ public class NewsService {
      */
     public ResponseDTO<Long> add(NewsAddDTO addDTO) {
         NewsEntity entity = SmartBeanUtil.copy(addDTO, NewsEntity.class);
+        entity.setEmployeeId(SmartRequestTokenUtil.getRequestUser().getRequestUserId());
         entity.setCreateTime(new Date());
         entity.setUpdateTime(new Date());
         newsDao.insert(entity);

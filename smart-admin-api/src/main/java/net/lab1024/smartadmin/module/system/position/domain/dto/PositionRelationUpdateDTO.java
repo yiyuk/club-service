@@ -3,6 +3,8 @@ package net.lab1024.smartadmin.module.system.position.domain.dto;
 import com.fasterxml.jackson.annotation.JsonFormat;
 import io.swagger.annotations.ApiModelProperty;
 import lombok.Data;
+import net.lab1024.smartadmin.common.anno.ApiModelPropertyEnum;
+import net.lab1024.smartadmin.module.system.position.PositionRelationTypeEnum;
 
 import javax.validation.constraints.NotNull;
 import java.util.Date;
@@ -25,6 +27,7 @@ public class PositionRelationUpdateDTO{
     private Long employeeId;
 
     @ApiModelProperty("关联状况")
+    @ApiModelPropertyEnum(PositionRelationTypeEnum.class)
     private Integer status;
 
     @ApiModelProperty("入社审批人ID")

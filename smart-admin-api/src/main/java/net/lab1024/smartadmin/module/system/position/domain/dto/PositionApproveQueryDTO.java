@@ -2,6 +2,8 @@ package net.lab1024.smartadmin.module.system.position.domain.dto;
 
 import io.swagger.annotations.ApiModelProperty;
 import lombok.Data;
+import net.lab1024.smartadmin.common.anno.ApiModelPropertyEnum;
+import net.lab1024.smartadmin.common.constant.ApproveTypeEnum;
 
 /**
  * @author yiyuzi
@@ -14,7 +16,7 @@ public class PositionApproveQueryDTO {
     @ApiModelProperty("主键")
     private  Long id;
 
-    @ApiModelProperty("申请状态 YES已通过 NO待审核")
+    @ApiModelPropertyEnum(ApproveTypeEnum.class)
     private Integer status;
 
     @ApiModelProperty("申请人ID")

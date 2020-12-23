@@ -1,6 +1,7 @@
 package net.lab1024.smartadmin.module.system.position;
 
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
+import net.lab1024.smartadmin.common.constant.ApproveTypeEnum;
 import net.lab1024.smartadmin.common.domain.PageResultDTO;
 import net.lab1024.smartadmin.common.domain.ResponseDTO;
 import net.lab1024.smartadmin.module.business.notice.NoticeService;
@@ -37,8 +38,8 @@ public class PositionService {
     private NoticeService noticeService;
 
 
-    public String getPosRelTypeByValue(Integer integer){
-        switch (integer){
+    public String getPosRelTypeByValue(Integer integer) {
+        switch (integer) {
             case 1:
                 return PositionRelationTypeEnum.JOIN_WAIT.toString();
             case 2:
@@ -52,8 +53,8 @@ public class PositionService {
             case 6:
                 return PositionRelationTypeEnum.EXIT_SUCCESS.toString();
 
-                default:
-                    ResponseDTO.wrap(PositionResponseCodeConst.RELATION_STATUS_DEFINE);
+            default:
+                ResponseDTO.wrap(PositionResponseCodeConst.RELATION_STATUS_DEFINE);
         }
         return "";
     }
@@ -120,7 +121,7 @@ public class PositionService {
         if (CollectionUtils.isNotEmpty(dtoList)) {
             //return ResponseDTO.wrap(PositionResponseCodeConst.REMOVE_DEFINE);
             //将报错改为删除这些用户与该社团的关联关系
-            for (PositionRelationResultDTO resultDTO:dtoList ) {
+            for (PositionRelationResultDTO resultDTO : dtoList) {
                 positionDao.deleteRelationByPositionId(resultDTO.getPositionId());
             }
         }
@@ -134,7 +135,7 @@ public class PositionService {
      * @param id
      * @return
      */
-    public ResponseDTO<PositionApproveResultDTO> queryPositionApproveByID(Long id){
+    public ResponseDTO<PositionApproveResultDTO> queryPositionApproveByID(Long id) {
         return ResponseDTO.succData(positionDao.selectPositionApproveByID(id));
     }
 
@@ -144,7 +145,7 @@ public class PositionService {
      * @param queryDTO
      * @return
      */
-    public ResponseDTO<List<PositionApproveResultDTO>> queryPositionApprove(PositionApproveQueryDTO queryDTO){
+    public ResponseDTO<List<PositionApproveResultDTO>> queryPositionApprove(PositionApproveQueryDTO queryDTO) {
         List<PositionApproveResultDTO> list = positionDao.selectPositionApprove(queryDTO);
         return ResponseDTO.succData(list);
     }
@@ -155,11 +156,11 @@ public class PositionService {
      * @param addDTO
      * @return
      */
-     public ResponseDTO<String> addPositionApprove(PositionApproveAddDTO addDTO){
-         addDTO.setEmployeeId(SmartRequestTokenUtil.getRequestUser().getRequestUserId());
-         positionDao.insertPositionApprove(addDTO);
-         return ResponseDTO.succ();
-     };
+    public ResponseDTO<String> addPositionApprove(PositionApproveAddDTO addDTO) {
+        addDTO.setEmployeeId(SmartRequestTokenUtil.getRequestUser().getRequestUserId());
+        positionDao.insertPositionApprove(addDTO);
+        return ResponseDTO.succ();
+    }
 
     /**
      * 更新社团审核状态
@@ -168,27 +169,31 @@ public class PositionService {
      * @return
      */
     @Transactional(rollbackFor = Exception.class)
-    public ResponseDTO<String> updatePositionApprove(PositionApproveUpdateDTO updateDTO){
+    public ResponseDTO<String> updatePositionApprove(PositionApproveUpdateDTO updateDTO) {
         NoticeAddDTO noticeAddDTO = new NoticeAddDTO();
         String positionName = positionDao.selectPositionApproveByID(updateDTO.getId()).getPositionName();
-        if(updateDTO.getApprove_result()){
-            updateDTO.setStatus(PositionApproveTypeEnum.SUCCESS.getValue());
+        Long approverId = SmartRequestTokenUtil.getRequestUser().getRequestUserId();
+        updateDTO.setApproverId(approverId);
+        if (updateDTO.getStatus() == ApproveTypeEnum.SUCCESS.getValue()) {
             //新建社团
             PositionApproveResultDTO resultDTO = positionDao.selectPositionApproveByID(updateDTO.getId());
-            positionDao.insert(SmartBeanUtil.copy(resultDTO,PositionEntity.class));
+            positionDao.insert(SmartBeanUtil.copy(resultDTO, PositionEntity.class));
             //发送站内信
             noticeAddDTO.setTitle("创建社团成功");
-            noticeAddDTO.setContent("您的创建"+positionName+"申请已通过！");
-        }else {
-            updateDTO.setStatus(PositionApproveTypeEnum.FAIL.getValue());
+            noticeAddDTO.setContent("您的创建" + positionName + "申请已通过！");
+        } else if (updateDTO.getStatus() == ApproveTypeEnum.FAIL.getValue()) {
             //发送站内信
             noticeAddDTO.setTitle("创建社团失败");
-            noticeAddDTO.setContent("您的创建"+positionName+"申请被拒绝。");
+            noticeAddDTO.setContent("您的创建" + positionName + "申请被拒绝。");
+        } else {
+            return ResponseDTO.wrap(PositionResponseCodeConst.APPROVE_STATUS_DEFINE);
         }
-        noticeService.addAndSend(noticeAddDTO, SmartRequestTokenUtil.getRequestUser().getRequestUserId());
+        noticeService.addAndSend(noticeAddDTO, approverId);
         positionDao.updatePositionApprove(updateDTO);
         return ResponseDTO.succ();
-    };
+    }
+
+    ;
 
     /**
      * 根据社团Id查询关联信息
@@ -197,13 +202,13 @@ public class PositionService {
      * @return
      */
     public ResponseDTO<PageResultDTO<PositionRelationResultDTO>> queryRelationByPage(PositionRelationQueryDTO queryDTO) {
-        if(queryDTO.getEmployeeId() <= 0){
+        if (queryDTO.getEmployeeId() <= 0) {
             queryDTO.setEmployeeId(null);
         }
-        if(queryDTO.getPositionId() <= 0){
+        if (queryDTO.getPositionId() <= 0) {
             queryDTO.setPositionId(null);
         }
-        if(queryDTO.getStatus() <= 0){
+        if (queryDTO.getStatus() <= 0) {
             queryDTO.setStatus(null);
         }
         Page page = SmartPageUtil.convert2QueryPage(queryDTO);
@@ -233,18 +238,15 @@ public class PositionService {
     @Transactional(rollbackFor = Exception.class)
     public ResponseDTO<String> applyPositionRelation(PositionRelationUpdateDTO updateDTO) {
         //查询是否存在相关的社团关联
-        List<PositionRelationResultDTO> dtoList = positionDao.selectRelation(SmartBeanUtil.copy(updateDTO,PositionRelationQueryDTO.class));
-        if (!CollectionUtils.isNotEmpty(dtoList)) {
-            PositionRelationAddDTO positionRelAddDTO = SmartBeanUtil.copy(updateDTO,PositionRelationAddDTO.class);//new PositionRelationAddDTO();
+        List<PositionRelationResultDTO> dtoList = positionDao.selectRelation(SmartBeanUtil.copy(updateDTO, PositionRelationQueryDTO.class));
+        if (CollectionUtils.isEmpty(dtoList)) {
+            PositionRelationAddDTO positionRelAddDTO = SmartBeanUtil.copy(updateDTO, PositionRelationAddDTO.class);//new PositionRelationAddDTO();
             positionRelAddDTO.setStatus(PositionRelationTypeEnum.JOIN_WAIT.getValue());
             positionDao.insertRelation(positionRelAddDTO);
         } else {
             PositionRelationTypeEnum positionRelationTypeEnum = PositionRelationTypeEnum.valueOf(this.getPosRelTypeByValue(updateDTO.getStatus()));
             switch (positionRelationTypeEnum) {
                 case JOIN_SUCCESS:
-                    updateDTO.setStatus(PositionRelationTypeEnum.EXIT_WAIT.getValue());
-                    break;
-                case EXIT_FAIL:
                     updateDTO.setStatus(PositionRelationTypeEnum.EXIT_WAIT.getValue());
                     break;
 
@@ -258,15 +260,15 @@ public class PositionService {
     }
 
     /**
-     * 更新社团-用户关联
+     * 审核用户入团退团，更新社团-用户关联
      *
      * @param updateDTO
      * @return
      */
     @Transactional(rollbackFor = Exception.class)
-    public ResponseDTO<String> approvePositionRelation(PositionRelationUpdateDTO updateDTO){
+    public ResponseDTO<String> approvePositionRelation(PositionRelationUpdateDTO updateDTO) {
         //判断关联是否存在
-        List<PositionRelationResultDTO> dtoList = positionDao.selectRelation(SmartBeanUtil.copy(updateDTO,PositionRelationQueryDTO.class));
+        List<PositionRelationResultDTO> dtoList = positionDao.selectRelation(SmartBeanUtil.copy(updateDTO, PositionRelationQueryDTO.class));
         if (CollectionUtils.isEmpty(dtoList)) {
             return ResponseDTO.wrap(PositionResponseCodeConst.RELATION_EXITS_DEFINE);
         }
@@ -274,41 +276,43 @@ public class PositionService {
         PositionEntity positionEntity = positionDao.selectPositionByID(updateDTO.getPositionId());
         NoticeAddDTO noticeAddDTO = new NoticeAddDTO();
         PositionRelationTypeEnum positionRelationTypeEnum = PositionRelationTypeEnum.valueOf(this.getPosRelTypeByValue(updateDTO.getStatus()));
-        switch (positionRelationTypeEnum){
+        switch (positionRelationTypeEnum) {
             case JOIN_WAIT:
-                if(updateDTO.getApplyResult()){
+                if (updateDTO.getApplyResult()) {
                     //成功加入
                     updateDTO.setJoinTime(new Date());
                     updateDTO.setStatus(PositionRelationTypeEnum.JOIN_SUCCESS.getValue());
-                    updateDTO.setJoinApproverId((long) 1);//SmartRequestTokenUtil.getRequestUser().getRequestUserId());
+                    updateDTO.setJoinApproverId(SmartRequestTokenUtil.getRequestUser().getRequestUserId());
+                    positionDao.updateRelation(updateDTO);
 
                     noticeAddDTO.setTitle("入团通知");
-                    noticeAddDTO.setContent("恭喜你加入"+positionEntity.getPositionName()+"！");
-
-                }else {
+                    noticeAddDTO.setContent("恭喜你加入" + positionEntity.getPositionName() + "！");
+                } else {
                     //拒绝加入则删除关联
-                    PositionRelationQueryDTO positionRelationQueryDTO = SmartBeanUtil.copy(updateDTO,PositionRelationQueryDTO.class);
+                    PositionRelationQueryDTO positionRelationQueryDTO = SmartBeanUtil.copy(updateDTO, PositionRelationQueryDTO.class);
                     positionDao.deleteRelation(positionRelationQueryDTO);
 
                     //发送站内信
                     noticeAddDTO.setTitle("入团失败");
-                    noticeAddDTO.setContent("您的加入"+positionEntity.getPositionName()+"申请被拒绝。");
+                    noticeAddDTO.setContent("您的加入" + positionEntity.getPositionName() + "申请被拒绝。");
                 }
                 break;
             case EXIT_WAIT:
-                if(updateDTO.getApplyResult()){
+                if (updateDTO.getApplyResult()) {
                     updateDTO.setExitTime(new Date());
                     updateDTO.setStatus(PositionRelationTypeEnum.EXIT_SUCCESS.getValue());
                     updateDTO.setExitApproverId(SmartRequestTokenUtil.getRequestUser().getRequestUserId());
+                    positionDao.updateRelation(updateDTO);
 
                     noticeAddDTO.setTitle("退团成功");
-                    noticeAddDTO.setContent("您已退出"+positionEntity.getPositionName()+"！");
-                }else {
-                    updateDTO.setStatus(PositionRelationTypeEnum.EXIT_FAIL.getValue());
+                    noticeAddDTO.setContent("您已退出" + positionEntity.getPositionName() + "！");
+                } else {
+                    updateDTO.setStatus(PositionRelationTypeEnum.JOIN_SUCCESS.getValue());
                     updateDTO.setExitApproverId(SmartRequestTokenUtil.getRequestUser().getRequestUserId());
+                    positionDao.updateRelation(updateDTO);
 
                     noticeAddDTO.setTitle("退团失败");
-                    noticeAddDTO.setContent("您的退出"+positionEntity.getPositionName()+"申请被拒绝。");
+                    noticeAddDTO.setContent("您的退出" + positionEntity.getPositionName() + "申请被拒绝。");
                 }
                 break;
 
@@ -316,7 +320,6 @@ public class PositionService {
                 return ResponseDTO.wrap(PositionResponseCodeConst.UPDATE_RELATION_DEFINE);
         }
         noticeService.addAndSend(noticeAddDTO, SmartRequestTokenUtil.getRequestUser().getRequestUserId());
-        positionDao.updateRelation(updateDTO);
         return ResponseDTO.succ();
     }
 

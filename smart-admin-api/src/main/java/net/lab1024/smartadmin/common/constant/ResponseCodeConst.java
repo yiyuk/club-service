@@ -1,5 +1,6 @@
 package net.lab1024.smartadmin.common.constant;
 
+import net.lab1024.smartadmin.module.business.activity.constant.ActivityResponseCodeConst;
 import net.lab1024.smartadmin.module.system.department.DepartmentResponseCodeConst;
 import net.lab1024.smartadmin.module.system.employee.constant.EmployeeResponseCodeConst;
 import net.lab1024.smartadmin.module.support.file.constant.FileResponseCodeConst;
@@ -34,6 +35,7 @@ public class ResponseCodeConst {
         ResponseCodeContainer.register(PrivilegeResponseCodeConst.class, 7001, 7999);
         ResponseCodeContainer.register(OrderOperateLogOperateTypeConst.class, 8001, 8999);
         ResponseCodeContainer.register(PositionResponseCodeConst.class, 13000, 13999);
+        ResponseCodeContainer.register(ActivityResponseCodeConst.class, 14000, 14999);
 
     }
 

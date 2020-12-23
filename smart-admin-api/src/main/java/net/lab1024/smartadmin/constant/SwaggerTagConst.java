@@ -50,6 +50,8 @@ public class SwaggerTagConst {
         public static final String MANAGER_HEART_BEAT = "通用-心跳服务";
 
         public static final String COMMON_NEWS = "通用-新闻";
+
+        public static final String COMMON_ACTIVITY = "通用-活动";
     }
 
     /**

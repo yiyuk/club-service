@@ -27,40 +27,35 @@ import javax.validation.Valid;
 @OperateLog
 @Api(tags = {SwaggerTagConst.Admin.COMMON_NEWS})
 public class NewsController {
+
     @Autowired
     private NewsService newsService;
 
-    @NoNeedLogin
     @ApiOperation(value = "分页查询",notes = "@author hxy")
     @PostMapping("/news/page/query")
     @NoValidPrivilege
     public ResponseDTO<PageResultDTO<NewsResultDTO>> queryByPage(@RequestBody @Validated NewsQueryDTO queryDTO) {
         return newsService.queryByPage(queryDTO);
     }
-    @NoNeedLogin
+
     @ApiOperation(value = "添加",notes = "@author hxy")
     @PostMapping("/news/add")
-    @NoValidPrivilege
     public ResponseDTO<Long> add(@RequestBody @Valid NewsAddDTO addTO){
         return newsService.add(addTO);
     }
-    @NoNeedLogin
+
     @ApiOperation(value="修改",notes = "status 0未发布 1发布 @author hxy")
     @PostMapping("/news/update")
-    @NoValidPrivilege
     public ResponseDTO<Long> update(@RequestBody @Valid NewsUpdateDTO updateDTO){
         return newsService.update(updateDTO);
     }
 
-    @NoNeedLogin
     @ApiOperation(value="删除",notes = "@author hxy")
     @GetMapping("/news/delete/{id}")
-    @NoValidPrivilege
     public ResponseDTO<String> delete(@PathVariable("id") Long id){
         return newsService.delete(id);
     }
 
-    @NoNeedLogin
     @ApiOperation(value="详情",notes = "@author hxy")
     @GetMapping("/news/detail/{id}")
     @NoValidPrivilege

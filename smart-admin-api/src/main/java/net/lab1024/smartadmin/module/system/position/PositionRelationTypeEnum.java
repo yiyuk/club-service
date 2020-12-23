@@ -8,41 +8,20 @@ import net.lab1024.smartadmin.common.domain.BaseEnum;
  */
 
 public enum PositionRelationTypeEnum implements BaseEnum {
-    
-    /**
-     * 用户正在等待入团
-     */
-    JOIN_WAIT(1, "JOIN_WAIT"),
 
-    /**
-     * 用户入团失败
-     */
-    JOIN_FAIL(2,"JOIN_FAIL"),
+    JOIN_WAIT(1, "用户正在等待入团"),
 
-    /**
-     * 用户入团成功
-     */
-    JOIN_SUCCESS(3, "JOIN_SUCCESS"),
+    JOIN_FAIL(2,"用户入团失败"),
 
-    /**
-     * 用户正在等待退团
-     */
-    EXIT_WAIT(4, "EXIT_WAIT"),
+    JOIN_SUCCESS(3, "用户入团成功"),
 
-    /**
-     * 用户退团失败
-     */
-    EXIT_FAIL(5, "EXIT_FAIL"),
+    EXIT_WAIT(4, "用户正在等待退团"),
 
-    /**
-     * 用户退团成功
-     */
-    EXIT_SUCCESS(6, "EXIT_SUCCESS"),
+    EXIT_FAIL(5, "用户退团失败"),
 
-    /**
-     * 社团解散
-     */
-    DISSOLUTION(7,"DISSOLUTION");
+    EXIT_SUCCESS(6, "用户退团成功"),
+
+    DISSOLUTION(7,"社团解散");
 
 
 

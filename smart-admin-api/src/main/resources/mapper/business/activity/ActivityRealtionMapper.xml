@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
-<mapper namespace="net.lab1024.smartadmin.module.business.news.NewsDao">
+<mapper namespace="net.lab1024.smartadmin.module.business.activity.dao.ActivityRelationDao">
 
     <resultMap id="NewsEntity" type="net.lab1024.smartadmin.module.business.news.domain.entity.NewsEntity"></resultMap>
 
@@ -8,18 +8,18 @@
 
     <select id="queryByPage" resultMap="NewsResultDTO">
         select
-            news.id,
-            news.news_title,
-            news.news_text,
-            news.position_id,
-            news.author_id,
-            news.employee_id,
-            news.status,
-            news.update_time,
-            news.create_time,
+        news.id,
+        news.news_title,
+        news.news_text,
+        news.position_id,
+        news.author_id,
+        news.employee_id,
+        news.status,
+        news.update_time,
+        news.create_time,
 
-            users.actual_name,
-            pos.position_name
+        users.actual_name,
+        pos.position_name
         from t_news news, t_employee users, t_position pos
         <where>
             news.author_id = users.id
@@ -32,6 +32,9 @@
             </if>
             <if test="queryDTO.positionId != null">
                 AND news.position_id = #{queryDTO.positionId}
+            </if>
+            <if test="queryDTO.authorId != null">
+                AND news.author_id = #{queryDTO.authorId}
             </if>
             <if test="queryDTO.newsTitle != null and queryDTO.newsTitle != ''">
                 AND INSTR(news.news_title,#{queryDTO.newsTitle})

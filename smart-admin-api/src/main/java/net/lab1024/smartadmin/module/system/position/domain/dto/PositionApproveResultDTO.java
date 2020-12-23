@@ -25,7 +25,7 @@ public class PositionApproveResultDTO {
     private String remark;
 
     /**
-     * 申请状态 YES已通过 NO待审核
+     * 申请状态
      */
     private Integer status;
 

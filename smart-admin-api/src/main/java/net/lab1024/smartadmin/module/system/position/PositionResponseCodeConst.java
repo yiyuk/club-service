@@ -15,6 +15,8 @@ public class PositionResponseCodeConst extends ResponseCodeConst {
 
     public static final PositionResponseCodeConst RELATION_EXITS_DEFINE = new PositionResponseCodeConst(13300, "关联不存在");
 
+    public static final PositionResponseCodeConst APPROVE_STATUS_DEFINE = new PositionResponseCodeConst(13400, "社团创建申请状态错误");
+
     protected PositionResponseCodeConst(int code, String msg) {
         super(code, msg);
     }

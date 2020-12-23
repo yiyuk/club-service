@@ -1,0 +1,70 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="net.lab1024.smartadmin.module.business.activity.dao.ActivityApproveDao">
+
+    <resultMap id="Entity"
+               type="net.lab1024.smartadmin.module.business.activity.domain.entity.ActivityApproveEntity"></resultMap>
+
+    <resultMap id="ResultDTO"
+               type="net.lab1024.smartadmin.module.business.activity.domain.dto.ActivityApproveResultDTO"></resultMap>
+
+    <select id="selectByPage" resultMap="ResultDTO">
+        SELECT
+        t.id,
+        t.activity_name,
+        t.activity_remark,
+        t.start_time,
+        t.stop_time,
+        t.position_id,
+        t.employee_id,
+        t.approve_id,
+        t.status,
+        t.activity_number,
+        t.activity_maximum,
+        t.place,
+        t.create_time,
+        t.update_time,
+
+        users.actual_name,
+        pos.position_name
+        FROM t_activity_approve t, t_employee users, t_position pos
+        <where>
+            t.employee_id = users.id AND t.position_id = pos.id
+            <if test="queryDTO.employeeId != null">
+                AND t.employee_id = #{queryDTO.employeeId}
+            </if>
+            <if test="queryDTO.approveId != null">
+                AND t.approve_id = #{queryDTO.approveId}
+            </if>
+            <if test="queryDTO.positionId != null">
+                AND t.position_id = #{queryDTO.positionId}
+            </if>
+            <if test="queryDTO.activityName != null and queryDTO.activityName != ''">
+                AND INSTR(t.activity_name,#{queryDTO.activityName})
+            </if>
+            <if test="queryDTO.status != null">
+                AND t.status = #{queryDTO.status}
+            </if>
+            <if test='queryDTO.timeType == "1"'>
+                AND t.start_time > now()
+            </if>
+            <if test='queryDTO.timeType == "2"'>
+                AND now() >= t.start_time
+                AND t.stop_time > now()
+            </if>
+            <if test='queryDTO.timeType == "3"'>
+                AND now() >= t_stop_time
+            </if>
+        </where>
+    </select>
+
+    <update id="UpdateApprove">
+        UPDATE t_activity_approve
+        SET
+        status = #{entity.status},
+        update_time = #{entity.updateTime},
+        approve_id = #{entity.approveId}
+        WHERE id = #{entity.id}
+    </update>
+
+</mapper>
