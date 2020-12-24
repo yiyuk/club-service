@@ -15,6 +15,11 @@
         er.create_time
     </sql>
 
+    <update id="updateRoleById">
+        UPDATE t_role_employee
+        SET role_id = {role}
+        WHERE employee_id = {id}
+    </update>
 
     <select id="selectRoleIdByEmployeeId" resultType="java.lang.Long">
         SELECT

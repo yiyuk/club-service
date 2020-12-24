@@ -11,6 +11,7 @@ import net.lab1024.smartadmin.module.system.position.domain.entity.PositionAppro
 import net.lab1024.smartadmin.module.system.position.domain.entity.PositionEntity;
 import net.lab1024.smartadmin.module.system.position.domain.entity.PositionRelationEntity;
 import net.lab1024.smartadmin.module.system.privilege.constant.PrivilegeTypeEnum;
+import net.lab1024.smartadmin.module.system.role.roleemployee.RoleEmployeeDao;
 import net.lab1024.smartadmin.util.SmartBeanUtil;
 import net.lab1024.smartadmin.util.SmartPageUtil;
 import net.lab1024.smartadmin.util.SmartRequestTokenUtil;
@@ -36,6 +37,9 @@ public class PositionService {
 
     @Autowired
     private NoticeService noticeService;
+
+    @Autowired
+    private RoleEmployeeDao roleEmployeeDao;
 
 
     public String getPosRelTypeByValue(Integer integer) {
@@ -175,6 +179,8 @@ public class PositionService {
         Long approverId = SmartRequestTokenUtil.getRequestUser().getRequestUserId();
         updateDTO.setApproverId(approverId);
         if (updateDTO.getStatus() == ApproveTypeEnum.SUCCESS.getValue()) {
+            //将角色更改为社团管理员
+            roleEmployeeDao.updateRoleById(SmartRequestTokenUtil.getRequestUser().getRequestUserId(),53);
             //新建社团
             PositionApproveResultDTO resultDTO = positionDao.selectPositionApproveByID(updateDTO.getId());
             positionDao.insert(SmartBeanUtil.copy(resultDTO, PositionEntity.class));

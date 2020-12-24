@@ -3,17 +3,16 @@ package net.lab1024.smartadmin.module.business.activity.Service;
 import net.lab1024.smartadmin.common.constant.ApproveTypeEnum;
 import net.lab1024.smartadmin.common.domain.PageResultDTO;
 import net.lab1024.smartadmin.common.domain.ResponseDTO;
-import net.lab1024.smartadmin.module.business.activity.constant.ActivityApproveStatusTypeEnum;
 import net.lab1024.smartadmin.module.business.activity.constant.ActivityResponseCodeConst;
 import net.lab1024.smartadmin.module.business.activity.dao.ActivityApproveDao;
 import net.lab1024.smartadmin.module.business.activity.dao.ActivityDao;
 import net.lab1024.smartadmin.module.business.activity.domain.dto.*;
 import net.lab1024.smartadmin.module.business.activity.domain.entity.ActivityApproveEntity;
 import net.lab1024.smartadmin.module.business.activity.domain.entity.ActivityEntity;
+import net.lab1024.smartadmin.module.business.notice.NoticeService;
+import net.lab1024.smartadmin.module.business.notice.domain.dto.NoticeAddDTO;
 import net.lab1024.smartadmin.module.system.employee.EmployeeDao;
 import net.lab1024.smartadmin.module.system.position.PositionDao;
-import net.lab1024.smartadmin.module.system.position.domain.dto.PositionResultVO;
-import net.lab1024.smartadmin.module.system.position.domain.entity.PositionEntity;
 import net.lab1024.smartadmin.util.SmartBeanUtil;
 import net.lab1024.smartadmin.util.SmartRequestTokenUtil;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -48,6 +47,9 @@ public class ActivityApproveService {
 
     @Autowired
     private EmployeeDao employeeDao;
+
+    @Autowired
+    private NoticeService noticeService;
 
     private boolean checkTime(Date startTime, Date stopTime) {
         //开始时间不能大于结束时间，
@@ -113,7 +115,7 @@ public class ActivityApproveService {
         entity.setStatus(ApproveTypeEnum.WAIT.getValue());
         entity.setUpdateTime(new Date());
         entity.setCreateTime(new Date());
-        //TODO entity.setEmployeeId(SmartRequestTokenUtil.getRequestUser().getRequestUserId());
+        entity.setEmployeeId(SmartRequestTokenUtil.getRequestUser().getRequestUserId());
         activityApproveDao.insert(entity);
         return ResponseDTO.succ();
     }
@@ -130,11 +132,24 @@ public class ActivityApproveService {
         entity.setUpdateTime(new Date());
         entity.setApproveId(SmartRequestTokenUtil.getRequestUser().getRequestUserId());
         activityApproveDao.UpdateApprove(entity);
+
+        ActivityEntity activityEntity = SmartBeanUtil.copy(activityApproveDao.selectById(updateDTO.getId()),ActivityEntity.class);
         if (updateDTO.getStatus() == ApproveTypeEnum.SUCCESS.getValue()) {
             //向活动表里添加活动
-            ActivityEntity activityEntity = SmartBeanUtil.copy(activityApproveDao.selectById(updateDTO.getId()),ActivityEntity.class);
             activityEntity.setActivityNumber((long) 0);
             activityDao.insert(activityEntity);
+
+            //发送通知
+            NoticeAddDTO noticeAddDTO = new NoticeAddDTO();
+            noticeAddDTO.setTitle("活动申请成功");
+            noticeAddDTO.setContent("您的创建" + activityEntity.getActivityName() + "申请已通过。");
+            noticeService.addAndSend(noticeAddDTO, SmartRequestTokenUtil.getRequestUser().getRequestUserId());
+        }else if (updateDTO.getStatus() == ApproveTypeEnum.FAIL.getValue()){
+            //发送通知
+            NoticeAddDTO noticeAddDTO = new NoticeAddDTO();
+            noticeAddDTO.setTitle("活动申请失败");
+            noticeAddDTO.setContent("您的创建" + activityEntity.getActivityName() + "申请被拒绝。");
+            noticeService.addAndSend(noticeAddDTO, SmartRequestTokenUtil.getRequestUser().getRequestUserId());
         }
         return ResponseDTO.succ();
     }

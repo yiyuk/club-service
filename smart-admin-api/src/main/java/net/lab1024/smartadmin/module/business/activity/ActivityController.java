@@ -92,13 +92,13 @@ public class ActivityController {
         return activityRelationService.queryActivityRelationByPage(queryDTO);
     }
 
-    @ApiOperation(value = "参与活动申请", notes = "用户参与活动申请 @author hxy")
+    @ApiOperation(value = "报名活动", notes = "报名活动 @author hxy")
     @PostMapping("/activity/relation/add")
     public ResponseDTO<String> addActivityRelation(@RequestBody @Valid ActivityRelationAddDTO addDTO) {
         return activityRelationService.addActivityRelation(addDTO);
     }
 
-    @ApiOperation(value = "审核参与活动申请", notes = "审核参与活动申请 @author hxy")
+    @ApiOperation(value = "审核活动报名", notes = "审核活动报名 @author hxy")
     @PostMapping("/activity/relation/approve")
     public ResponseDTO<String> approveActivityRelation(@RequestBody @Valid ActivityRelationUpdateDTO updateDTO) {
         return activityRelationService.approveActivityRelation(updateDTO);

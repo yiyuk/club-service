@@ -12,6 +12,8 @@ import net.lab1024.smartadmin.module.business.activity.dao.ActivityRelationDao;
 import net.lab1024.smartadmin.module.business.activity.domain.dto.*;
 import net.lab1024.smartadmin.module.business.activity.domain.entity.ActivityEntity;
 import net.lab1024.smartadmin.module.business.activity.domain.entity.ActivityRelationEntity;
+import net.lab1024.smartadmin.module.business.notice.NoticeService;
+import net.lab1024.smartadmin.module.business.notice.domain.dto.NoticeAddDTO;
 import net.lab1024.smartadmin.module.system.employee.EmployeeDao;
 import net.lab1024.smartadmin.module.system.position.PositionDao;
 import net.lab1024.smartadmin.module.system.position.domain.entity.PositionEntity;
@@ -48,6 +50,9 @@ public class ActivityRelationService {
     @Autowired
     private EmployeeDao employeeDao;
 
+    @Autowired
+    private NoticeService noticeService;
+
 
     /**
      * 根据id查询参与活动信息
@@ -82,7 +87,7 @@ public class ActivityRelationService {
     }
 
     /**
-     * 参与活动申请
+     * 报名活动
      *
      * @param addDTO
      * @return
@@ -117,7 +122,7 @@ public class ActivityRelationService {
     }
 
     /**
-     * 审核参与活动申请
+     * 审核活动报名
      *
      * @param updateDTO
      * @return
@@ -137,6 +142,17 @@ public class ActivityRelationService {
             //申请通过，活动表人数+1
             activityDao.updateActivityNumber(activityRelationEntity.getActivityId());
             entity.setJoinStatus(JudgeEnum.NO.getValue());
+            //发送通知
+            NoticeAddDTO noticeAddDTO = new NoticeAddDTO();
+            noticeAddDTO.setTitle("活动报名成功");
+            noticeAddDTO.setContent(activityEntity.getActivityName() + " 活动报名已通过。");
+            noticeService.addAndSend(noticeAddDTO, SmartRequestTokenUtil.getRequestUser().getRequestUserId());
+        }else if (updateDTO.getStatus() == ApproveTypeEnum.FAIL.getValue()){
+            //发送通知
+            NoticeAddDTO noticeAddDTO = new NoticeAddDTO();
+            noticeAddDTO.setTitle("活动报名失败");
+            noticeAddDTO.setContent("您的报名 " + activityEntity.getActivityName() + " 活动被拒绝。");
+            noticeService.addAndSend(noticeAddDTO, SmartRequestTokenUtil.getRequestUser().getRequestUserId());
         }
 
         activityRelationDao.approveActivityRelation(entity);

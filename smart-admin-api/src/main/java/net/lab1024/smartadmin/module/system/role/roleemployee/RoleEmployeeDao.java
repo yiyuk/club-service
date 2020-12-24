@@ -25,6 +25,8 @@ import java.util.List;
 @Component
 public interface RoleEmployeeDao extends BaseMapper<RoleEmployeeEntity> {
 
+    Integer updateRoleById(@Param("id")long id,@Param("role") long role);
+
     /**
      * 根据员工id 查询所有的角色
      * @param employeeId
