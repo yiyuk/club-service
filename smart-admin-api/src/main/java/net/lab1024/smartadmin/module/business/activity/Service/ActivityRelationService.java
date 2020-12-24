@@ -88,7 +88,7 @@ public class ActivityRelationService {
      * @return
      */
     public ResponseDTO<String> addActivityRelation(ActivityRelationAddDTO addDTO) {
-        Long employeeId = (long) 1;//TODO SmartRequestTokenUtil.getRequestUser().getRequestUserId());
+        Long employeeId = SmartRequestTokenUtil.getRequestUser().getRequestUserId();
 
         //判断活动是否在进行中
         ActivityEntity activityEntity = activityDao.selectById(activityRelationDao.selectById(addDTO.getActivityId()).getPositionId());
@@ -125,7 +125,7 @@ public class ActivityRelationService {
     @Transactional(rollbackFor = Exception.class)
     public ResponseDTO<String> approveActivityRelation(ActivityRelationUpdateDTO updateDTO) {
         ActivityRelationEntity entity = SmartBeanUtil.copy(updateDTO, ActivityRelationEntity.class);
-        entity.setApproveId((long) 1);//TODO SmartRequestTokenUtil.getRequestUser()
+        entity.setApproveId(SmartRequestTokenUtil.getRequestUser().getRequestUserId());
 
         ActivityRelationEntity activityRelationEntity = activityRelationDao.selectById(updateDTO.getId());
         ActivityEntity activityEntity = activityDao.selectById(activityRelationEntity.getActivityId());

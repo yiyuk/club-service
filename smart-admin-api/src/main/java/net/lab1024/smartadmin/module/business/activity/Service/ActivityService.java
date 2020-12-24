@@ -16,6 +16,7 @@ import net.lab1024.smartadmin.module.system.employee.EmployeeDao;
 import net.lab1024.smartadmin.module.system.position.PositionDao;
 import net.lab1024.smartadmin.util.SmartBeanUtil;
 import net.lab1024.smartadmin.util.SmartPageUtil;
+import net.lab1024.smartadmin.util.SmartRequestTokenUtil;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -103,7 +104,6 @@ public class ActivityService {
             return ResponseDTO.wrap(ActivityResponseCodeConst.TIME_ERROR);
         }
 
-        //TODO updateDTO.setEmployeeId(SmartRequestTokenUtil.getRequestUser().getRequestUserId());
         activityDao.updateActivity(updateDTO);
         return ResponseDTO.succ();
     }

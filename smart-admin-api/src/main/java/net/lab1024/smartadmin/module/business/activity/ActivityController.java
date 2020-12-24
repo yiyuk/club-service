@@ -33,25 +33,25 @@ public class ActivityController {
 
     @Autowired
     ActivityService activityService;
-@NoNeedLogin
+
     @ApiOperation(value = "根据ID查询活动申请记录", notes = "根据ID查询活动申请记录 @author hxy")
     @GetMapping("/activity/approve/getById/{id}")
     public ResponseDTO<ActivityApproveResultDTO> getApproveById(@PathVariable Long id) {
         return activityApproveService.queryActivityApproveById(id);
     }
-@NoNeedLogin
+
     @ApiOperation(value = "分页查询活动申请记录", notes = "分页查询活动申请记录 @author hxy")
     @PostMapping("/activity/approve/getListPage")
     public ResponseDTO<PageResultDTO<ActivityApproveResultDTO>> getApproveListPage(@RequestBody @Valid ActivityApproveQueryDTO queryDTO) {
         return activityApproveService.queryActivityApproveByPage(queryDTO);
     }
-@NoNeedLogin
+
     @ApiOperation(value = "活动申请", notes = "活动申请 @author hxy")
     @PostMapping("/activity/approve/add")
     public ResponseDTO<String> addApprove(@RequestBody @Valid ActivityApproveAddDTO addDTO) {
         return activityApproveService.addActivityApprove(addDTO);
     }
-    @NoNeedLogin
+
     @ApiOperation(value = "审核活动申请", notes = "审核活动申请 @author hxy")
     @PostMapping("/activity/approve/approve")
     public ResponseDTO<String> approveActivity(@RequestBody @Valid ActivityApproveUpdateDTO updateDTO) {
@@ -59,19 +59,19 @@ public class ActivityController {
     }
 
 
-    @NoNeedLogin
+
     @ApiOperation(value = "根据ID查询活动", notes = "根据ID查询活动申请记录 @author hxy")
     @GetMapping("/activity/getById/{id}")
     public ResponseDTO<ActivityResultDTO> queryActivityById(@PathVariable Long id) {
         return activityService.queryActivityById(id);
     }
-    @NoNeedLogin
+
     @ApiOperation(value = "分页查询活动", notes = "分页查询活动申请记录 @author hxy")
     @PostMapping("/activity/getByPage")
     public ResponseDTO<PageResultDTO<ActivityResultDTO>> queryActivityByPage(@RequestBody @Valid ActivityQueryDTO queryDTO) {
         return activityService.queryActivityByPage(queryDTO);
     }
-    @NoNeedLogin
+
     @ApiOperation(value = "更新活动", notes = "更新活动 @author hxy")
     @PostMapping("/activity/update")
     public ResponseDTO<String> updateActivity(@RequestBody @Valid ActivityUpdateDTO updateDTO) {
@@ -79,31 +79,31 @@ public class ActivityController {
     }
 
 
-    @NoNeedLogin
+
     @ApiOperation(value = "根据id查询参与活动信息", notes = "根据id查询参与活动信息 @author hxy")
     @GetMapping("/activity/relation/getById/{id}")
     public ResponseDTO<ActivityRelationResultDTO> queryActivityRelationById(@PathVariable Long id) {
         return activityRelationService.queryActivityRelationById(id);
     }
-    @NoNeedLogin
+
     @ApiOperation(value = "分页查询参与活动信息", notes = "分页查询参与活动信息 @author hxy")
     @PostMapping("/activity/relation/getByPage")
     public ResponseDTO<PageResultDTO<ActivityRelationResultDTO>> queryActivityRelationByPage(@RequestBody @Valid ActivityRelationQueryDTO queryDTO) {
         return activityRelationService.queryActivityRelationByPage(queryDTO);
     }
-    @NoNeedLogin
+
     @ApiOperation(value = "参与活动申请", notes = "用户参与活动申请 @author hxy")
     @PostMapping("/activity/relation/add")
     public ResponseDTO<String> addActivityRelation(@RequestBody @Valid ActivityRelationAddDTO addDTO) {
         return activityRelationService.addActivityRelation(addDTO);
     }
-    @NoNeedLogin
+
     @ApiOperation(value = "审核参与活动申请", notes = "审核参与活动申请 @author hxy")
     @PostMapping("/activity/relation/approve")
     public ResponseDTO<String> approveActivityRelation(@RequestBody @Valid ActivityRelationUpdateDTO updateDTO) {
         return activityRelationService.approveActivityRelation(updateDTO);
     }
-    @NoNeedLogin
+
     @ApiOperation(value = "更新参与活动状态", notes = "更新参与活动状态 @author hxy")
     @PostMapping("/activity/relation/updateJoinStatus")
     public ResponseDTO<String> updateActivityRelationJoinStatus(@RequestBody @Valid ActivityRelationUpdateDTO updateDTO) {

@@ -128,7 +128,7 @@ public class ActivityApproveService {
     public ResponseDTO<String> approveActivity(ActivityApproveUpdateDTO updateDTO) {
         ActivityApproveEntity entity = SmartBeanUtil.copy(updateDTO, ActivityApproveEntity.class);
         entity.setUpdateTime(new Date());
-        //TODO entity.setApproveId(SmartRequestTokenUtil.getRequestUser().getRequestUserId());
+        entity.setApproveId(SmartRequestTokenUtil.getRequestUser().getRequestUserId());
         activityApproveDao.UpdateApprove(entity);
         if (updateDTO.getStatus() == ApproveTypeEnum.SUCCESS.getValue()) {
             //向活动表里添加活动
