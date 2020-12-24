@@ -2,8 +2,49 @@
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 <mapper namespace="net.lab1024.smartadmin.module.business.fund.FundDao">
 
-    <resultMap id="EmailEntity" type="net.lab1024.smartadmin.module.business.fund.FundDao"></resultMap>
+    <resultMap id="FundEntity" type="net.lab1024.smartadmin.module.business.fund.domain.FundEntity"></resultMap>
 
+    <resultMap id="FundResultDTO" type="net.lab1024.smartadmin.module.business.fund.domain.dto.FundResultDTO"></resultMap>
 
+    <select id="selectByPage" resultMap="FundResultDTO">
+        SELECT
+        t.id,
+        t.remark,
+        t.position_id,
+        t.employee_id,
+        t.approve_id,
+        t.approve_status,
+        t.fund,
+        t.create_time,
+        t.update_time,
+
+        users.actual_name as employee_name,
+        pos.position_name
+        FROM t_fund t, t_employee users, t_position pos
+        <where>
+            t.employee_id = users.id AND t.position_id = pos.id
+            <if test="queryDTO.employeeId != null">
+                AND t.employee_id = #{queryDTO.employeeId}
+            </if>
+            <if test="queryDTO.positionId != null">
+                AND t.position_id = #{queryDTO.positionId}
+            </if>
+            <if test='queryDTO.approveStatus != null'>
+                AND t.approve_status = #{queryDTO.approveStatus}
+            </if>
+            <if test='queryDTO.approveId != null'>
+                AND t.approve_id = #{queryDTO.approveId}
+            </if>
+        </where>
+    </select>
+
+    <update id="UpdateApprove">
+        UPDATE t_fund
+        SET
+        approve_status = #{entity.approveStatus},
+        update_time = #{entity.updateTime},
+        approve_id = #{entity.approveId}
+        WHERE id = #{entity.id}
+    </update>
 
 </mapper>

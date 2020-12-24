@@ -12,6 +12,8 @@ import net.lab1024.smartadmin.module.business.activity.dao.ActivityRelationDao;
 import net.lab1024.smartadmin.module.business.activity.domain.dto.*;
 import net.lab1024.smartadmin.module.business.activity.domain.entity.ActivityEntity;
 import net.lab1024.smartadmin.module.business.activity.domain.entity.ActivityRelationEntity;
+import net.lab1024.smartadmin.module.business.message.MessageService;
+import net.lab1024.smartadmin.module.business.message.domain.dto.MessageAddDTO;
 import net.lab1024.smartadmin.module.business.notice.NoticeService;
 import net.lab1024.smartadmin.module.business.notice.domain.dto.NoticeAddDTO;
 import net.lab1024.smartadmin.module.system.employee.EmployeeDao;
@@ -51,7 +53,7 @@ public class ActivityRelationService {
     private EmployeeDao employeeDao;
 
     @Autowired
-    private NoticeService noticeService;
+    private MessageService messageService;
 
 
     /**
@@ -143,16 +145,20 @@ public class ActivityRelationService {
             activityDao.updateActivityNumber(activityRelationEntity.getActivityId());
             entity.setJoinStatus(JudgeEnum.NO.getValue());
             //发送通知
-            NoticeAddDTO noticeAddDTO = new NoticeAddDTO();
-            noticeAddDTO.setTitle("活动报名成功");
-            noticeAddDTO.setContent(activityEntity.getActivityName() + " 活动报名已通过。");
-            noticeService.addAndSend(noticeAddDTO, SmartRequestTokenUtil.getRequestUser().getRequestUserId());
+            MessageAddDTO messageAddDTO = new MessageAddDTO();
+            messageAddDTO.setTitle("活动报名成功");
+            messageAddDTO.setContent(activityEntity.getActivityName() + " 活动报名已通过。");
+            messageAddDTO.setReceiverId(entity.getEmployeeId());
+            messageAddDTO.setSendStatus(JudgeEnum.YES.getValue());
+            messageService.addMessage(messageAddDTO);
         }else if (updateDTO.getStatus() == ApproveTypeEnum.FAIL.getValue()){
             //发送通知
-            NoticeAddDTO noticeAddDTO = new NoticeAddDTO();
-            noticeAddDTO.setTitle("活动报名失败");
-            noticeAddDTO.setContent("您的报名 " + activityEntity.getActivityName() + " 活动被拒绝。");
-            noticeService.addAndSend(noticeAddDTO, SmartRequestTokenUtil.getRequestUser().getRequestUserId());
+            MessageAddDTO messageAddDTO = new MessageAddDTO();
+            messageAddDTO.setTitle("活动报名失败");
+            messageAddDTO.setContent("您的 " + activityEntity.getActivityName() + " 活动报名被拒绝。");
+            messageAddDTO.setReceiverId(entity.getEmployeeId());
+            messageAddDTO.setSendStatus(JudgeEnum.YES.getValue());
+            messageService.addMessage(messageAddDTO);
         }
 
         activityRelationDao.approveActivityRelation(entity);

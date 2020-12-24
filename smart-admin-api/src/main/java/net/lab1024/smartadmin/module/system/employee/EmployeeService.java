@@ -179,7 +179,7 @@ public class EmployeeService {
             entity.setLoginPwd(SmartDigestUtil.encryptPassword(CommonConst.Password.SALT_FORMAT, entity.getLoginPwd()));
         }
 
-        entity.setCreateUser((long) 1);//TODO requestToken.getRequestUserId());
+        entity.setCreateUser(requestToken.getRequestUserId());
         if (StringUtils.isEmpty(entity.getBirthday())) {
             entity.setBirthday(null);
         }

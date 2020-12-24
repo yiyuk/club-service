@@ -3,6 +3,8 @@ package net.lab1024.smartadmin.module.business.news.domain.dto;
 import com.fasterxml.jackson.annotation.JsonFormat;
 import io.swagger.annotations.ApiModelProperty;
 import lombok.Data;
+import net.lab1024.smartadmin.common.anno.ApiModelPropertyEnum;
+import net.lab1024.smartadmin.common.constant.JudgeEnum;
 
 import javax.validation.constraints.NotBlank;
 import java.util.Date;
@@ -25,7 +27,7 @@ public class NewsUpdateDTO {
     @NotBlank(message = "新闻内容不能为空")
     private String newsText;
 
-    @ApiModelProperty("新闻状态，是否发布")
+    @ApiModelPropertyEnum(JudgeEnum.class)//("新闻状态，是否发布")
     private Integer status;
 
     public NewsUpdateDTO() {

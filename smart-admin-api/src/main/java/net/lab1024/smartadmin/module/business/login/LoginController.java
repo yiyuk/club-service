@@ -28,7 +28,7 @@ import javax.validation.Valid;
  * @date 2017年12月19日上午11:46:04
  */
 @RestController
-@Api(tags = {SwaggerTagConst.Admin.MANAGER_USER_LOGIN})
+@Api(tags = {SwaggerTagConst.Club.MANAGER_USER_LOGIN})
 @OperateLog
 public class LoginController {
 

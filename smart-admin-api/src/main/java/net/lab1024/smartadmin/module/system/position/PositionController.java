@@ -17,7 +17,7 @@ import java.util.List;
 /**
  * @author zzr
  */
-@Api(tags = {SwaggerTagConst.Admin.MANAGER_JOB})
+@Api(tags = {SwaggerTagConst.Club.MANAGER_JOB})
 @OperateLog
 @RestController
 public class PositionController {
@@ -49,6 +49,13 @@ public class PositionController {
         return positionService.queryPositionById(id);
     }
 
+    @ApiOperation(value = "删除社团", notes = "删除社团 @author zzr")
+    @GetMapping("/position/deletePosition/{id}")
+    public ResponseDTO<String> deletePosition(@PathVariable Long id) {
+        return positionService.removePosition(id);
+    }
+
+
     @ApiOperation(value = "根据ID查询创建社团申请", notes = "根据ID查询创建社团申请 @author hxy")
     @GetMapping("/position/queryPositionApproveById/{id}")
     public ResponseDTO<PositionApproveResultDTO> queryPositionApproveByID(@PathVariable Long id){
@@ -72,6 +79,7 @@ public class PositionController {
      public ResponseDTO<String> updatePositionApprove(@RequestBody @Valid PositionApproveUpdateDTO updateDTO){
          return positionService.updatePositionApprove(updateDTO);
      }
+
 
 
 

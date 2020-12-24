@@ -25,7 +25,7 @@ import java.util.List;
  * @date 2017年12月19日上午11:34:52
  */
 @RestController
-@Api(tags = {SwaggerTagConst.Admin.MANAGER_USER})
+@Api(tags = {SwaggerTagConst.Club.MANAGER_USER})
 @OperateLog
 public class EmployeeController {
 

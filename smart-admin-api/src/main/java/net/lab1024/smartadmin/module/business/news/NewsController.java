@@ -25,7 +25,7 @@ import javax.validation.Valid;
 
 @RestController
 @OperateLog
-@Api(tags = {SwaggerTagConst.Admin.COMMON_NEWS})
+@Api(tags = {SwaggerTagConst.Club.COMMON_NEWS})
 public class NewsController {
 
     @Autowired

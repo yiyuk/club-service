@@ -21,7 +21,7 @@ import javax.validation.Valid;
  * @date 2020/12/22 23:03
  */
 
-@Api(tags = {SwaggerTagConst.Admin.COMMON_ACTIVITY})
+@Api(tags = {SwaggerTagConst.Club.COMMON_ACTIVITY})
 @OperateLog
 @RestController
 public class ActivityController {

@@ -1,0 +1,61 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="net.lab1024.smartadmin.module.business.message.MessageDao">
+
+    <resultMap id="ActivityEntity" type="net.lab1024.smartadmin.module.business.activity.domain.entity.ActivityEntity"></resultMap>
+
+    <resultMap id="MessageResultDTO" type="net.lab1024.smartadmin.module.business.message.domain.dto.MessageResultDTO"></resultMap>
+
+    <select id="selectByPage" resultMap="MessageResultDTO">
+        SELECT
+        t.id,
+        t.sender_id,
+        t.receiver_id,
+        t.send_status,
+        t.receive_status,
+        t.title,
+        t.content,
+        t.send_time,
+        t.update_time,
+        t.create_time,
+
+        users.actual_name as sender_name
+        FROM t_message t, t_employee users
+        <where>
+            t.sender_id = users.id
+            <if test="queryDTO.senderId != null">
+                AND t.sender_id = #{queryDTO.senderId}
+            </if>
+            <if test="queryDTO.receiverId != null">
+                AND t.receiver_id = #{queryDTO.receiverId}
+            </if>
+            <if test="queryDTO.sendStatus != null">
+                AND t.send_status = #{queryDTO.sendStatus}
+            </if>
+            <if test="queryDTO.receiveStatus != null">
+                AND t.receive_status = #{queryDTO.receiveStatus}
+            </if>
+            <if test="queryDTO.title != null and queryDTO.title != ''">
+                AND INSTR(t.title,#{queryDTO.title})
+            </if>
+        </where>
+    </select>
+
+    <update id="updateMessage">
+        UPDATE t_message
+        SET
+            receiver_id = #{entity.receiverId},
+            send_status = #{entity.sendStatus},
+            receive_status = #{entity.receiveStatus},
+            title = #{entity.title},
+            content = #{entity.content},
+            <if test="entity.sendTime != null">
+                send_time = #{entity.sendTime},
+            </if>
+            update_time = #{entity.updateTime}
+        WHERE
+            id = #{entity.id}
+
+    </update>
+
+</mapper>

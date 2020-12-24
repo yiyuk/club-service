@@ -26,7 +26,7 @@ import java.util.List;
  */
 @OperateLog
 @RestController
-@Api(tags = {SwaggerTagConst.Admin.MANAGER_PRIVILEGE})
+@Api(tags = {SwaggerTagConst.Club.MANAGER_PRIVILEGE})
 public class PrivilegeController {
 
     @Autowired

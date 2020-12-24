@@ -1,6 +1,7 @@
 package net.lab1024.smartadmin.module.business.activity.Service;
 
 import net.lab1024.smartadmin.common.constant.ApproveTypeEnum;
+import net.lab1024.smartadmin.common.constant.JudgeEnum;
 import net.lab1024.smartadmin.common.domain.PageResultDTO;
 import net.lab1024.smartadmin.common.domain.ResponseDTO;
 import net.lab1024.smartadmin.module.business.activity.constant.ActivityResponseCodeConst;
@@ -9,8 +10,8 @@ import net.lab1024.smartadmin.module.business.activity.dao.ActivityDao;
 import net.lab1024.smartadmin.module.business.activity.domain.dto.*;
 import net.lab1024.smartadmin.module.business.activity.domain.entity.ActivityApproveEntity;
 import net.lab1024.smartadmin.module.business.activity.domain.entity.ActivityEntity;
-import net.lab1024.smartadmin.module.business.notice.NoticeService;
-import net.lab1024.smartadmin.module.business.notice.domain.dto.NoticeAddDTO;
+import net.lab1024.smartadmin.module.business.message.MessageService;
+import net.lab1024.smartadmin.module.business.message.domain.dto.MessageAddDTO;
 import net.lab1024.smartadmin.module.system.employee.EmployeeDao;
 import net.lab1024.smartadmin.module.system.position.PositionDao;
 import net.lab1024.smartadmin.util.SmartBeanUtil;
@@ -49,7 +50,7 @@ public class ActivityApproveService {
     private EmployeeDao employeeDao;
 
     @Autowired
-    private NoticeService noticeService;
+    private MessageService messageService;
 
     private boolean checkTime(Date startTime, Date stopTime) {
         //开始时间不能大于结束时间，
@@ -74,7 +75,7 @@ public class ActivityApproveService {
         ActivityApproveResultDTO resultDTO = SmartBeanUtil.copy(activityApproveEntity, ActivityApproveResultDTO.class);
         resultDTO.setPositionName(positionDao.selectPositionByID(activityApproveEntity.getPositionId()).getPositionName());
         resultDTO.setEmployeeName(employeeDao.selectById(activityApproveEntity.getEmployeeId()).getActualName());
-        if(activityApproveEntity.getApproveId() != null){
+        if (activityApproveEntity.getApproveId() != null) {
             resultDTO.setApproveName(employeeDao.selectById(activityApproveEntity.getApproveId()).getActualName());
         }
         return ResponseDTO.succData(resultDTO);
@@ -91,7 +92,6 @@ public class ActivityApproveService {
         Page page = SmartPageUtil.convert2QueryPage(queryDTO);
         List<ActivityApproveResultDTO> resultDTOList = activityApproveDao.selectByPage(page, queryDTO);
         page.setRecords(resultDTOList.stream().map(e -> SmartBeanUtil.copy(e, ActivityApproveResultDTO.class)).collect(Collectors.toList()));
-        //PageResultDTO<ActivityApproveResultDTO> pageResultDTO = SmartPageUtil.convert2PageResult(page);
         return ResponseDTO.succData(SmartPageUtil.convert2PageResult(page));
     }
 
@@ -133,23 +133,27 @@ public class ActivityApproveService {
         entity.setApproveId(SmartRequestTokenUtil.getRequestUser().getRequestUserId());
         activityApproveDao.UpdateApprove(entity);
 
-        ActivityEntity activityEntity = SmartBeanUtil.copy(activityApproveDao.selectById(updateDTO.getId()),ActivityEntity.class);
+        ActivityEntity activityEntity = SmartBeanUtil.copy(activityApproveDao.selectById(updateDTO.getId()), ActivityEntity.class);
         if (updateDTO.getStatus() == ApproveTypeEnum.SUCCESS.getValue()) {
             //向活动表里添加活动
             activityEntity.setActivityNumber((long) 0);
             activityDao.insert(activityEntity);
 
             //发送通知
-            NoticeAddDTO noticeAddDTO = new NoticeAddDTO();
-            noticeAddDTO.setTitle("活动申请成功");
-            noticeAddDTO.setContent("您的创建" + activityEntity.getActivityName() + "申请已通过。");
-            noticeService.addAndSend(noticeAddDTO, SmartRequestTokenUtil.getRequestUser().getRequestUserId());
-        }else if (updateDTO.getStatus() == ApproveTypeEnum.FAIL.getValue()){
+            MessageAddDTO messageAddDTO = new MessageAddDTO();
+            messageAddDTO.setTitle("活动申请成功");
+            messageAddDTO.setContent("您的创建" + activityEntity.getActivityName() + "申请已通过。");
+            messageAddDTO.setReceiverId(activityEntity.getEmployeeId());
+            messageAddDTO.setSendStatus(JudgeEnum.YES.getValue());
+            messageService.addMessage(messageAddDTO);
+        } else if (updateDTO.getStatus() == ApproveTypeEnum.FAIL.getValue()) {
             //发送通知
-            NoticeAddDTO noticeAddDTO = new NoticeAddDTO();
-            noticeAddDTO.setTitle("活动申请失败");
-            noticeAddDTO.setContent("您的创建" + activityEntity.getActivityName() + "申请被拒绝。");
-            noticeService.addAndSend(noticeAddDTO, SmartRequestTokenUtil.getRequestUser().getRequestUserId());
+            MessageAddDTO messageAddDTO = new MessageAddDTO();
+            messageAddDTO.setTitle("活动申请失败");
+            messageAddDTO.setContent("您的创建" + activityEntity.getActivityName() + "申请被拒绝。");
+            messageAddDTO.setReceiverId(activityEntity.getEmployeeId());
+            messageAddDTO.setSendStatus(JudgeEnum.YES.getValue());
+            messageService.addMessage(messageAddDTO);
         }
         return ResponseDTO.succ();
     }

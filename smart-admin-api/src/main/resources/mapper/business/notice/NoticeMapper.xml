@@ -13,7 +13,6 @@
 
     <resultMap id="NoticeReadCountDTO" type="net.lab1024.smartadmin.module.business.notice.domain.dto.NoticeReadCountDTO"></resultMap>
 
-
     <select id="queryByPage" resultMap="NoticeDTO">
         select
             n.id,

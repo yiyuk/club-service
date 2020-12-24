@@ -2,6 +2,8 @@ package net.lab1024.smartadmin.module.business.news.domain.dto;
 
 import io.swagger.annotations.ApiModelProperty;
 import lombok.Data;
+import net.lab1024.smartadmin.common.anno.ApiModelPropertyEnum;
+import net.lab1024.smartadmin.common.constant.JudgeEnum;
 
 import javax.validation.constraints.NotBlank;
 
@@ -30,7 +32,7 @@ public class NewsAddDTO {
     @ApiModelProperty("发布者ID")
     private Long employeeId;
 
-    @ApiModelProperty("新闻状态，是否发布")
+    @ApiModelPropertyEnum(JudgeEnum.class)//("新闻状态，是否发布")
     private Integer status;
 
     public NewsAddDTO() {
