@@ -1,23 +1,35 @@
-package net.lab1024.smartadmin.module.business.activity.domain.entity;
+package net.lab1024.smartadmin.module.business.activity.domain.dto;
 
-import com.baomidou.mybatisplus.annotation.TableName;
 import lombok.Data;
-import net.lab1024.smartadmin.common.domain.BaseEntity;
 
 import java.util.Date;
 
 /**
  * @author yiyuzi
- * @date 2020/12/23 9:20
+ * @date 2020/12/24 0:55
  */
 
 @Data
-@TableName("t_activity_relation")
-public class ActivityRelationEntity extends BaseEntity {
+public class ActivityRelationResultDTO {
     /**
      * 活动ID
      */
     private Long activityId;
+
+    /**
+     * 活动名
+     */
+    private String activityName;
+
+    /**
+     * 社团id
+     */
+    private Long positionId;
+
+    /**
+     * 社团名
+     */
+    private String positionName;
 
     /**
      * 参与者ID
@@ -25,9 +37,9 @@ public class ActivityRelationEntity extends BaseEntity {
     private Long employeeId;
 
     /**
-     * 社团id
+     * 参与者姓名
      */
-    private Long positionId;
+    private String employeeName;
 
     /**
      * 报名状况
@@ -48,4 +60,9 @@ public class ActivityRelationEntity extends BaseEntity {
      * 审批人id(社团管理员)
      */
     private Long approveId;
+
+    /**
+     * 审批人姓名(社团管理员)
+     */
+    private String approveName;
 }

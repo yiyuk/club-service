@@ -2,80 +2,93 @@
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 <mapper namespace="net.lab1024.smartadmin.module.business.activity.dao.ActivityRelationDao">
 
-    <resultMap id="NewsEntity" type="net.lab1024.smartadmin.module.business.news.domain.entity.NewsEntity"></resultMap>
+    <resultMap id="ActivityRelationEntity"
+               type="net.lab1024.smartadmin.module.business.activity.domain.entity.ActivityRelationEntity"></resultMap>
 
-    <resultMap id="NewsResultDTO" type="net.lab1024.smartadmin.module.business.news.domain.dto.NewsResultDTO"></resultMap>
+    <resultMap id="ActivityRelationResultDTO"
+               type="net.lab1024.smartadmin.module.business.activity.domain.dto.ActivityRelationResultDTO"></resultMap>
 
-    <select id="queryByPage" resultMap="NewsResultDTO">
-        select
-        news.id,
-        news.news_title,
-        news.news_text,
-        news.position_id,
-        news.author_id,
-        news.employee_id,
-        news.status,
-        news.update_time,
-        news.create_time,
+    <select id="selectActivityRelationByPage" resultMap="ActivityRelationResultDTO">
+        SELECT
+        t.id,
+        t.activity_id,
+        t.employee_id,
+        t.position_id,
+        t.status,
+        t.join_status,
+        t.approve_time,
+        t.approve_id,
+        t.create_time,
+        t.update_time,
 
-        users.actual_name,
-        pos.position_name
-        from t_news news, t_employee users, t_position pos
+        users.actual_name as employee_name,
+        pos.position_name,
+        act.activity_name
+        FROM t_activity_relation t, t_employee users, t_position pos, t_activity act
         <where>
-            news.author_id = users.id
-            AND news.position_id = pos.id
-            <if test="queryDTO.employeeId != null">
-                AND news.employee_id = #{queryDTO.employeeId}
+            t.employee_id = users.id AND t.position_id = pos.id AND t.activity_id = act.id
+            <if test="queryDTO.activityId != null">
+                AND t.activity_id = #{queryDTO.activityId}
             </if>
-            <if test="queryDTO.authorId != null">
-                AND news.author_id = #{queryDTO.authorId}
+            <if test="queryDTO.employeeId != null">
+                AND t.employee_id = #{queryDTO.employeeId}
             </if>
             <if test="queryDTO.positionId != null">
-                AND news.position_id = #{queryDTO.positionId}
+                AND t.position_id = #{queryDTO.positionId}
             </if>
-            <if test="queryDTO.authorId != null">
-                AND news.author_id = #{queryDTO.authorId}
-            </if>
-            <if test="queryDTO.newsTitle != null and queryDTO.newsTitle != ''">
-                AND INSTR(news.news_title,#{queryDTO.newsTitle})
+            <if test="queryDTO.approveId != null">
+                AND t.approve_id = #{queryDTO.approveId}
             </if>
             <if test="queryDTO.status != null">
-                AND news.status = #{queryDTO.status}
+                AND t.status = #{queryDTO.status}
+            </if>
+            <if test="queryDTO.joinStatus != null">
+                AND t.join_status = #{queryDTO.joinStatus}
             </if>
         </where>
     </select>
 
-    <delete id="deleteById">
-        delete from t_news where id = #{id}
-    </delete>
-
-    <select id="queryNewsById" resultMap="NewsResultDTO">
-        select
-        news.id,
-        news.news_title,
-        news.news_text,
-        news.position_id,
-        news.author_id,
-        news.employee_id,
-        news.status,
-        news.update_time,
-        news.create_time,
-
-        users.actual_name,
-        pos.position_name
-        from t_news news, t_employee users, t_position pos
+    <select id="selectActivityRelation" resultMap="ActivityRelationResultDTO">
+        SELECT *
+        FROM t_activity_relation t
         <where>
-            news.author_id = users.id
-            AND news.position_id = pos.id
-            AND news.id = #{id}
+            <if test="queryDTO.activityId != null">
+                AND t.activity_id = #{queryDTO.activityId}
+            </if>
+            <if test="queryDTO.employeeId != null">
+                AND t.employee_id = #{queryDTO.employeeId}
+            </if>
+            <if test="queryDTO.positionId != null">
+                AND t.position_id = #{queryDTO.positionId}
+            </if>
+            <if test="queryDTO.approveId != null">
+                AND t.approve_id = #{queryDTO.approveId}
+            </if>
+            <if test="queryDTO.status != null">
+                AND t.status != #{queryDTO.status}
+            </if>
+            <if test="queryDTO.joinStatus != null">
+                AND t.join_status = #{queryDTO.joinStatus}
+            </if>
         </where>
     </select>
 
-    <delete id="deleteByIds">
-        delete from t_news where id in
-        <foreach collection="idList" open="(" close=")" separator="," item="item">
-            #{item}
-        </foreach>
-    </delete>
+    <update id="approveActivityRelation">
+        UPDATE t_activity_relation
+        SET
+            status = #{entity.status},
+            approve_id = #{entity.approveId},
+            join_status = #{entity.joinStatus},
+            approve_time = #{entity.approveTime},
+            update_time = #{entity.updateTime}
+        WHERE id = #{entity.id}
+    </update>
 
+    <update id="updateActivityRelationJoinStatus">
+        UPDATE t_activity_relation
+        SET
+            join_status = #{updateDTO.joinStatus},
+            update_time = now()
+        WHERE id = #{updateDTO.id}
+    </update>
 </mapper>

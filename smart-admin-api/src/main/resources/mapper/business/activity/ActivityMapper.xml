@@ -2,11 +2,11 @@
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 <mapper namespace="net.lab1024.smartadmin.module.business.activity.dao.ActivityDao">
 
-    <resultMap id="NewsEntity" type="net.lab1024.smartadmin.module.business.news.domain.entity.NewsEntity"></resultMap>
+    <resultMap id="ActivityEntity" type="net.lab1024.smartadmin.module.business.activity.domain.entity.ActivityEntity"></resultMap>
 
-    <resultMap id="NewsResultDTO" type="net.lab1024.smartadmin.module.business.news.domain.dto.NewsResultDTO"></resultMap>
+    <resultMap id="ActivityResultDTO" type="net.lab1024.smartadmin.module.business.activity.domain.dto.ActivityResultDTO"></resultMap>
 
-    <select id="selectByPage" resultMap="NewsResultDTO">
+    <select id="selectByPage" resultMap="ActivityResultDTO">
         SELECT
         t.id,
         t.activity_name,
@@ -21,9 +21,9 @@
         t.create_time,
         t.update_time,
 
-        users.actual_name,
+        users.actual_name as employee_name,
         pos.position_name
-        FROM t_activity_approve t, t_employee users, t_position pos
+        FROM t_activity t, t_employee users, t_position pos
         <where>
             t.employee_id = users.id AND t.position_id = pos.id
             <if test="queryDTO.employeeId != null">
@@ -66,7 +66,7 @@
     <update id="updateActivityNumber">
         UPDATE t_activity
         SET
-            activity_number += 1
+            activity_number = activity_number+1
         WHERE
             id = #{id}
 

@@ -21,7 +21,6 @@ public class ActivityQueryDTO extends PageParamDTO {
     private Long id;
 
     @ApiModelProperty("活动名称")
-    @NotBlank(message = "活动名称不能为空")
     private String activityName;
 
     @ApiModelProperty("社团id")
