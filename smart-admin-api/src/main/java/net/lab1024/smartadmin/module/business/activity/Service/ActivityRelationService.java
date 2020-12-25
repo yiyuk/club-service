@@ -98,18 +98,23 @@ public class ActivityRelationService {
         Long employeeId = SmartRequestTokenUtil.getRequestUser().getRequestUserId();
 
         //判断活动是否在进行中
-        ActivityEntity activityEntity = activityDao.selectById(activityRelationDao.selectById(addDTO.getActivityId()).getPositionId());
+        ActivityEntity activityEntity = activityDao.selectById(addDTO.getActivityId());
+        if(activityEntity == null){
+            return ResponseDTO.wrap(ActivityResponseCodeConst.NOT_EXIST_ERROR);
+        }
         if (activityEntity.getStartTime().compareTo(new Date()) >= 0 || activityEntity.getStopTime().compareTo(new Date()) <= 0) {
             return ResponseDTO.wrap(ActivityResponseCodeConst.NOT_RUN_ERROR);
         }
 
-        //判断同一活动之前是否有未审核或已通过的提交
+        //判断同一活动之前是否有未审核或已通过的报名
         ActivityRelationQueryDTO queryDTO = new ActivityRelationQueryDTO();
         queryDTO.setEmployeeId(employeeId);
         queryDTO.setActivityId(addDTO.getActivityId());
-        queryDTO.setStatus(ApproveTypeEnum.FAIL.getValue());
+        queryDTO.setStatus(ApproveTypeEnum.WAIT.getValue());
         List<ActivityRelationResultDTO> list = activityRelationDao.selectActivityRelation(queryDTO);
-        if (list.isEmpty()) {
+        queryDTO.setStatus(ApproveTypeEnum.SUCCESS.getValue());
+        List<ActivityRelationResultDTO> list2 = activityRelationDao.selectActivityRelation(queryDTO);
+        if (!list.isEmpty() || !list2.isEmpty()) {
             return ResponseDTO.wrap(ActivityResponseCodeConst.RESUBMIT_ERROR);
         }
 

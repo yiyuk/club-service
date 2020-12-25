@@ -78,9 +78,8 @@ public class ActivityController {
         return activityService.updateActivity(updateDTO);
     }
 
-    @NoNeedLogin
     @ApiOperation(value = "删除活动", notes = "删除活动 @author hxy")
-    @GetMapping("/activity/delete")
+    @GetMapping("/activity/delete/{id}")
     public ResponseDTO<String> deleteActivity(@PathVariable Long id) {
         return activityService.deleteActivity(id);
     }

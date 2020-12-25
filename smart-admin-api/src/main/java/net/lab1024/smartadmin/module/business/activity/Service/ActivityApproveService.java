@@ -58,7 +58,7 @@ public class ActivityApproveService {
             return true;
         }
         Date nowTime = new Date();
-        if (startTime.compareTo(stopTime) >= 0 || stopTime.compareTo(nowTime) <= 0) {
+        if (startTime.compareTo(stopTime) >= 0 || startTime.compareTo(nowTime) <= 0 || stopTime.compareTo(nowTime) <= 0) {
             return false;
         }
         return true;
@@ -106,7 +106,7 @@ public class ActivityApproveService {
         if (addDTO.getActivityMaximum() != null && addDTO.getActivityMaximum() <= 0) {
             return ResponseDTO.wrap(ActivityResponseCodeConst.MAX_NUMBER_ERROR);
         }
-        //开始时间不能大于结束时间，
+        //开始时间不能晚于结束时间和当前时间
         if (!checkTime(addDTO.getStartTime(), addDTO.getStopTime())) {
             return ResponseDTO.wrap(ActivityResponseCodeConst.TIME_ERROR);
         }
@@ -128,6 +128,10 @@ public class ActivityApproveService {
      */
     @Transactional(rollbackFor = Exception.class)
     public ResponseDTO<String> approveActivity(ActivityApproveUpdateDTO updateDTO) {
+        if (activityApproveDao.selectById(updateDTO.getId()).getStatus() != ApproveTypeEnum.WAIT.getValue()){
+            return ResponseDTO.wrap(ActivityResponseCodeConst.RE_APPROVE_ERROR);
+        }
+
         ActivityApproveEntity entity = SmartBeanUtil.copy(updateDTO, ActivityApproveEntity.class);
         entity.setUpdateTime(new Date());
         entity.setApproveId(SmartRequestTokenUtil.getRequestUser().getRequestUserId());

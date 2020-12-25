@@ -44,7 +44,7 @@ public class SwaggerTagConst {
     }
 
     /**
-     *  自定义分组2
+     *  自定义分组
      */
     public static class Club {
         public static final String COMMON_NEWS = "通用-新闻";

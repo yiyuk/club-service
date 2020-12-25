@@ -53,7 +53,7 @@ public class ActivityService {
             return true;
         }
         Date nowTime = new Date();
-        if (startTime.compareTo(stopTime) >= 0 || stopTime.compareTo(nowTime) <= 0) {
+        if (startTime.compareTo(stopTime) >= 0 || startTime.compareTo(nowTime) <= 0 || stopTime.compareTo(nowTime) <= 0) {
             return false;
         }
         return true;

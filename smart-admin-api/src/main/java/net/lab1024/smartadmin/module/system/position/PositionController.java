@@ -69,7 +69,7 @@ public class PositionController {
     public ResponseDTO<List<PositionApproveResultDTO>> getPositionApprove(@RequestBody @Valid PositionApproveQueryDTO queryDTO){
         return positionService.queryPositionApprove(queryDTO);
     }
-@NoNeedLogin
+
     @ApiOperation(value = "提交创建社团申请", notes = "提交创建社团申请 @author hxy")
     @PostMapping("/position/approve/add")
     public ResponseDTO<String> addPositionApprove(@RequestBody @Valid PositionApproveAddDTO addDTO){

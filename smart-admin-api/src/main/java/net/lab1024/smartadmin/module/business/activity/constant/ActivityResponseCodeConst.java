@@ -15,9 +15,16 @@ public class ActivityResponseCodeConst extends ResponseCodeConst {
 
     public static final ActivityResponseCodeConst NUMBER_LIMIT_ERROR = new ActivityResponseCodeConst(14002, "当前活动已到达人数上限");
 
-    public static final ActivityResponseCodeConst RESUBMIT_ERROR = new ActivityResponseCodeConst(14003, "当前活动已申请或已通过");
+    /**
+     * 参与活动申请
+     */
+    public static final ActivityResponseCodeConst RESUBMIT_ERROR = new ActivityResponseCodeConst(14003, "当前活动正在等待审核或已成功报名");
 
     public static final ActivityResponseCodeConst NOT_RUN_ERROR = new ActivityResponseCodeConst(14005, "当前活动未开始或已结束");
+
+    public static final ActivityResponseCodeConst RE_APPROVE_ERROR = new ActivityResponseCodeConst(14006, "当前活动已审核");
+
+    public static final ActivityResponseCodeConst NOT_EXIST_ERROR = new ActivityResponseCodeConst(14007, "活动不存在");
 
     protected ActivityResponseCodeConst(int code, String msg) {
         super(code, msg);
