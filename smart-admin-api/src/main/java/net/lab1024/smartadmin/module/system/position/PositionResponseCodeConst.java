@@ -17,6 +17,8 @@ public class PositionResponseCodeConst extends ResponseCodeConst {
 
     public static final PositionResponseCodeConst APPROVE_STATUS_DEFINE = new PositionResponseCodeConst(13400, "社团创建申请状态错误");
 
+    public static final PositionResponseCodeConst POSITION_NAME_DEFINE = new PositionResponseCodeConst(13500, "已存在同名社团");
+
     protected PositionResponseCodeConst(int code, String msg) {
         super(code, msg);
     }

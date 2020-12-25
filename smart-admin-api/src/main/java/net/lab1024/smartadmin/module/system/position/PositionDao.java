@@ -18,6 +18,13 @@ import java.util.List;
 @Mapper
 @Component
 public interface PositionDao extends BaseMapper<PositionEntity> {
+    /**
+     * 根据社团名获取社团列表
+     *
+     * @param name
+     * @return
+     */
+    List<PositionEntity> selectPositionListByName(@Param("name") String name);
 
     /**
      * 查询社团列表
@@ -138,4 +145,12 @@ public interface PositionDao extends BaseMapper<PositionEntity> {
      * @return
      */
     Integer updateRelation(@Param("updateDTO") PositionRelationUpdateDTO updateDTO);
+
+    /**
+     * 根据id查询关系
+     *
+     * @param id
+     * @return
+     */
+    PositionRelationResultDTO selectRelationById(@Param("id")Long id);
 }

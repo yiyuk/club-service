@@ -39,9 +39,6 @@ public class PositionService {
     private PositionDao positionDao;
 
     @Autowired
-    private NoticeService noticeService;
-
-    @Autowired
     private RoleEmployeeDao roleEmployeeDao;
 
     @Autowired
@@ -161,12 +158,18 @@ public class PositionService {
     }
 
     /**
-     * 添加社团审核状态
+     * 提交创建社团申请，添加社团审核状态
      *
      * @param addDTO
      * @return
      */
     public ResponseDTO<String> addPositionApprove(PositionApproveAddDTO addDTO) {
+        //判断是否存在同名社团
+        List<PositionEntity> list = positionDao.selectPositionListByName(addDTO.getPositionName());
+        if(!list.isEmpty()){
+            return ResponseDTO.wrap(PositionResponseCodeConst.POSITION_NAME_DEFINE);
+        }
+
         addDTO.setEmployeeId(SmartRequestTokenUtil.getRequestUser().getRequestUserId());
         positionDao.insertPositionApprove(addDTO);
         return ResponseDTO.succ();
@@ -362,29 +365,15 @@ public class PositionService {
     }
 
     /**
-     * 根据用户ID查询 所关联的社团信息
+     * 根据id查询关系
      *
-     * @param employeeId
+     * @param id
      * @return
      */
-    public List<PositionRelationResultDTO> queryPositionByEmployeeId(Long employeeId) {
-        PositionRelationQueryDTO positionRelationQueryDTO = new PositionRelationQueryDTO();
-        positionRelationQueryDTO.setEmployeeId(employeeId);
-        List<PositionRelationResultDTO> positionRelationList = positionDao.selectRelation(positionRelationQueryDTO);
-        return positionRelationList;
+    public ResponseDTO<PositionRelationResultDTO> getRelationById(Long id){
+        PositionRelationResultDTO resultDTO = positionDao.selectRelationById(id);
+        return ResponseDTO.succData(resultDTO);
     }
 
-    /**
-     * 根据社团ID查询 所关联的用户信息
-     *
-     * @param positionId
-     * @return
-     */
-    public List<PositionRelationResultDTO> queryPositionByPositionId(Long positionId) {
-        PositionRelationQueryDTO positionRelationQueryDTO = new PositionRelationQueryDTO();
-        positionRelationQueryDTO.setPositionId(positionId);
-        List<PositionRelationResultDTO> positionRelationList = positionDao.selectRelation(positionRelationQueryDTO);
-        return positionRelationList;
-    }
 
 }

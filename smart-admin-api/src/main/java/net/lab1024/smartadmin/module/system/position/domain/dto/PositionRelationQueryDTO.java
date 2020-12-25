@@ -24,4 +24,8 @@ public class PositionRelationQueryDTO extends PageParamDTO {
     @ApiModelPropertyEnum(PositionRelationTypeEnum.class)
     private Integer status;
 
+    public PositionRelationQueryDTO(){
+
+    }
+
 }

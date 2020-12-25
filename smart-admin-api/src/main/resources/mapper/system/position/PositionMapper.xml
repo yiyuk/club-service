@@ -7,12 +7,7 @@
         position_name,
         remark,
         update_time,
-        create_time,
---         join_time,
---         join_approver_id,
---         exit_time,
---         exit_approver_id,
---         status
+        create_time
     </sql>
 
     <sql id="relSql">
@@ -20,14 +15,21 @@
         position_name,
         remark,
         update_time,
-        create_time,
---         join_time,
---         join_approver_id,
---         exit_time,
---         exit_approver_id,
---         status
+        create_time
     </sql>
 
+    <select id="selectPositionListByName" resultType="net.lab1024.smartadmin.module.system.position.domain.entity.PositionEntity">
+        SELECT
+        *
+        FROM
+        t_position
+        <where>
+            <if test="name != null and name != ''">
+                AND INSTR(position_name,#{name})
+            </if>
+        </where>
+        order by create_time desc
+    </select>
     <select id="selectByPage" resultType="net.lab1024.smartadmin.module.system.position.domain.entity.PositionEntity">
         SELECT
         <include refid="baseSql"></include>
@@ -39,6 +41,29 @@
             </if>
         </where>
         order by create_time desc
+    </select>
+
+    <select id="selectRelationById" resultType="net.lab1024.smartadmin.module.system.position.domain.dto.PositionRelationResultDTO">
+        SELECT
+        emp.actual_name,
+        job.position_name,
+        rel.position_id,
+        rel.employee_id,
+        rel.update_time,
+        rel.create_time,
+        rel.join_time,
+        rel.join_approver_id,
+        rel.exit_time,
+        rel.exit_approver_id,
+        rel.status
+        FROM
+        t_position_relation rel, t_position job, t_employee emp
+        <where>
+            rel.position_id = job.id
+            AND rel.employee_id = emp.id
+            AND rel.id = {id}
+        </where>
+        order by rel.create_time desc
     </select>
 
     <select id="selectRelByPage" resultType="net.lab1024.smartadmin.module.system.position.domain.dto.PositionRelationResultDTO">

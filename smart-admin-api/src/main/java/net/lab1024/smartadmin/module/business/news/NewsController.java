@@ -32,7 +32,7 @@ public class NewsController {
     private NewsService newsService;
 
     @ApiOperation(value = "分页查询",notes = "@author hxy")
-    @PostMapping("/news/page/query")
+    @PostMapping("/news/getByPage")
     @NoValidPrivilege
     public ResponseDTO<PageResultDTO<NewsResultDTO>> queryByPage(@RequestBody @Validated NewsQueryDTO queryDTO) {
         return newsService.queryByPage(queryDTO);
@@ -51,13 +51,13 @@ public class NewsController {
     }
 
     @ApiOperation(value="删除",notes = "@author hxy")
-    @GetMapping("/news/delete/{id}")
+    @GetMapping("/news/deleteById/{id}")
     public ResponseDTO<String> delete(@PathVariable("id") Long id){
         return newsService.delete(id);
     }
 
     @ApiOperation(value="详情",notes = "@author hxy")
-    @GetMapping("/news/detail/{id}")
+    @GetMapping("/news/getById/{id}")
     @NoValidPrivilege
     public ResponseDTO<NewsResultDTO> detail(@PathVariable("id") Long id){
         return newsService.queryById(id);

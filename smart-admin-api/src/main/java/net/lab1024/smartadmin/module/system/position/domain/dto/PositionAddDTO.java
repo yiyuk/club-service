@@ -25,4 +25,8 @@ public class PositionAddDTO {
      */
     @ApiModelProperty("社团描述")
     private String remark;
+
+    public PositionAddDTO(){
+
+    }
 }

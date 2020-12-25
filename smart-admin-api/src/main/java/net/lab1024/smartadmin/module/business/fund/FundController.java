@@ -42,14 +42,14 @@ public class FundController {
     }
 
     @ApiOperation(value = "提交经费申请", notes = "提交经费申请 @author hxy")
-    @PostMapping("/fund/add")
-    public ResponseDTO<String> addApprove(@RequestBody @Valid FundAddDTO addDTO) {
+    @PostMapping("/fund/apply")
+    public ResponseDTO<String> applyFund(@RequestBody @Valid FundAddDTO addDTO) {
         return fundService.addFund(addDTO);
     }
 
     @ApiOperation(value = "审核经费申请", notes = "审核经费申请 @author hxy")
     @PostMapping("/fund/approve")
-    public ResponseDTO<String> approveActivity(@RequestBody @Valid FundUpdateDTO updateDTO) {
+    public ResponseDTO<String> approveFund(@RequestBody @Valid FundUpdateDTO updateDTO) {
         return fundService.approveFund(updateDTO);
     }
 }

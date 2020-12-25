@@ -18,4 +18,8 @@ public class PositionQueryDTO extends PageParamDTO {
     @ApiModelProperty("社团名称")
     private String positionName;
 
+    public PositionQueryDTO(){
+
+    }
+
 }

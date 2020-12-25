@@ -36,7 +36,7 @@ public class MessageController {
 
     @ApiOperation(value = "分页查询消息", notes = "分页查询消息 @author hxy")
     @PostMapping("/message/getByPage")
-    public ResponseDTO<PageResultDTO<MessageResultDTO>> queryActivityByPage(@RequestBody @Valid MessageQueryDTO queryDTO) {
+    public ResponseDTO<PageResultDTO<MessageResultDTO>> queryMessageByPage(@RequestBody @Valid MessageQueryDTO queryDTO) {
         return messageService.queryMessageByPage(queryDTO);
     }
 
@@ -48,7 +48,7 @@ public class MessageController {
 
     @ApiOperation(value = "更新消息", notes = "更新消息 @author hxy")
     @PostMapping("/message/update")
-    public ResponseDTO<String> updateActivity(@RequestBody @Valid MessageUpdateDTO updateDTO) {
+    public ResponseDTO<String> updateMessage(@RequestBody @Valid MessageUpdateDTO updateDTO) {
         return messageService.updateMessage(updateDTO);
     }
 

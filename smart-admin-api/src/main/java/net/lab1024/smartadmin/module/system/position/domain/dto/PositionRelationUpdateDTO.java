@@ -36,7 +36,7 @@ public class PositionRelationUpdateDTO{
     @ApiModelProperty("退社审批人ID")
     private Long exitApproverId;
 
-    @ApiModelProperty("申请结果")
+    @ApiModelProperty("申请或审核结果")
     private Boolean applyResult;
 
     @ApiModelProperty("入社时间")

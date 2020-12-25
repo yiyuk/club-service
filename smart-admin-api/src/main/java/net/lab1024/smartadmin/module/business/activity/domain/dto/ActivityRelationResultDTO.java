@@ -11,6 +11,7 @@ import java.util.Date;
 
 @Data
 public class ActivityRelationResultDTO {
+    private Long id;
     /**
      * 活动ID
      */

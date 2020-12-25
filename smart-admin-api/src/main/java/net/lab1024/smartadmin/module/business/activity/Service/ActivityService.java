@@ -7,10 +7,8 @@ import net.lab1024.smartadmin.common.domain.ResponseDTO;
 import net.lab1024.smartadmin.module.business.activity.constant.ActivityResponseCodeConst;
 import net.lab1024.smartadmin.module.business.activity.dao.ActivityApproveDao;
 import net.lab1024.smartadmin.module.business.activity.dao.ActivityDao;
-import net.lab1024.smartadmin.module.business.activity.domain.dto.ActivityAddDTO;
-import net.lab1024.smartadmin.module.business.activity.domain.dto.ActivityQueryDTO;
-import net.lab1024.smartadmin.module.business.activity.domain.dto.ActivityResultDTO;
-import net.lab1024.smartadmin.module.business.activity.domain.dto.ActivityUpdateDTO;
+import net.lab1024.smartadmin.module.business.activity.dao.ActivityRelationDao;
+import net.lab1024.smartadmin.module.business.activity.domain.dto.*;
 import net.lab1024.smartadmin.module.business.activity.domain.entity.ActivityEntity;
 import net.lab1024.smartadmin.module.system.employee.EmployeeDao;
 import net.lab1024.smartadmin.module.system.position.PositionDao;
@@ -36,6 +34,9 @@ import java.util.stream.Collectors;
 public class ActivityService {
     @Autowired
     private ActivityApproveDao activityApproveDao;
+
+    @Autowired
+    private ActivityRelationDao activityRelationDao;
 
     @Autowired
     private ActivityDao activityDao;
@@ -105,6 +106,27 @@ public class ActivityService {
         }
 
         activityDao.updateActivity(updateDTO);
+        return ResponseDTO.succ();
+    }
+
+    /**
+     * 删除活动
+     *
+     * @param id
+     * @return
+     */
+    @Transactional(rollbackFor = Exception.class)
+    public ResponseDTO<String> deleteActivity(Long id) {
+        //删除关联表里的相关记录
+        ActivityRelationQueryDTO activityRelationQueryDTO = new ActivityRelationQueryDTO();
+        activityRelationQueryDTO.setActivityId(activityDao.selectById(id).getId());
+        List<ActivityRelationResultDTO> list = activityRelationDao.selectActivityRelation(activityRelationQueryDTO);
+        for (ActivityRelationResultDTO item:list) {
+            activityRelationDao.deleteById(item.getId());
+        }
+
+        activityDao.deleteById(id);
+
         return ResponseDTO.succ();
     }
 }

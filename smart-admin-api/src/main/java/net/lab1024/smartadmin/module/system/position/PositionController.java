@@ -26,7 +26,7 @@ public class PositionController {
     private PositionService positionService;
 
     @ApiOperation(value = "分页查询所有社团", notes = "分页查询所有社团 @author zzr")
-    @PostMapping("/position/getListPage")
+    @PostMapping("/position/getByPage")
     public ResponseDTO<PageResultDTO<PositionResultVO>> getJobPage(@RequestBody @Valid PositionQueryDTO queryDTO) {
         return positionService.queryPositionByPage(queryDTO);
     }
@@ -44,59 +44,66 @@ public class PositionController {
     }
 
     @ApiOperation(value = "根据ID查询社团", notes = "根据ID查询社团 @author zzr")
-    @GetMapping("/position/queryById/{id}")
-    public ResponseDTO<PositionResultVO> queryJobById(@PathVariable Long id) {
+    @GetMapping("/position/getById/{id}")
+    public ResponseDTO<PositionResultVO> getPositionById(@PathVariable Long id) {
         return positionService.queryPositionById(id);
     }
 
     @ApiOperation(value = "删除社团", notes = "删除社团 @author zzr")
-    @GetMapping("/position/deletePosition/{id}")
+    @GetMapping("/position/delete/{id}")
     public ResponseDTO<String> deletePosition(@PathVariable Long id) {
         return positionService.removePosition(id);
     }
 
 
+
+
     @ApiOperation(value = "根据ID查询创建社团申请", notes = "根据ID查询创建社团申请 @author hxy")
-    @GetMapping("/position/queryPositionApproveById/{id}")
-    public ResponseDTO<PositionApproveResultDTO> queryPositionApproveByID(@PathVariable Long id){
+    @GetMapping("/position/approve/getById/{id}")
+    public ResponseDTO<PositionApproveResultDTO> getPositionApproveByID(@PathVariable Long id){
         return positionService.queryPositionApproveByID(id);
     }
 
     @ApiOperation(value = "查询社团审核状态", notes = "查询社团审核状态 @author hxy")
-    @PostMapping("/position/queryPositionApprove")
-    public ResponseDTO<List<PositionApproveResultDTO>> queryPositionApprove(@RequestBody @Valid PositionApproveQueryDTO queryDTO){
+    @PostMapping("/position/approve/getList")
+    public ResponseDTO<List<PositionApproveResultDTO>> getPositionApprove(@RequestBody @Valid PositionApproveQueryDTO queryDTO){
         return positionService.queryPositionApprove(queryDTO);
     }
-
+@NoNeedLogin
     @ApiOperation(value = "提交创建社团申请", notes = "提交创建社团申请 @author hxy")
-    @PostMapping("/position/addPositionApprove")
+    @PostMapping("/position/approve/add")
     public ResponseDTO<String> addPositionApprove(@RequestBody @Valid PositionApproveAddDTO addDTO){
         return positionService.addPositionApprove(addDTO);
     }
 
     @ApiOperation(value = "更新社团审核状态", notes = "更新社团审核状态 @author hxy")
-    @PostMapping("/position/updatePositionApprove")
+    @PostMapping("/position/approve/update")
      public ResponseDTO<String> updatePositionApprove(@RequestBody @Valid PositionApproveUpdateDTO updateDTO){
          return positionService.updatePositionApprove(updateDTO);
      }
 
 
 
+    @ApiOperation(value = "根据ID查询社团-用户关联", notes = "根据ID查询社团-用户关联 @author hxy")
+    @GetMapping("/position/relation/getById/{id}")
+    public ResponseDTO<PositionRelationResultDTO> getRelationByID(@PathVariable Long id){
+        return positionService.getRelationById(id);
+    }
 
     @ApiOperation(value = "根据条件分页查询社团-用户关联", notes = "根据单一条件分页查询社团-用户关联 @author hxy")
-    @PostMapping("/position/queryRelationByPage")
-    public ResponseDTO<PageResultDTO<PositionRelationResultDTO>> queryRelationByPage(@RequestBody @Valid PositionRelationQueryDTO queryDTO) {
+    @PostMapping("/position/relation/getByPage")
+    public ResponseDTO<PageResultDTO<PositionRelationResultDTO>> getRelationByPage(@RequestBody @Valid PositionRelationQueryDTO queryDTO) {
         return positionService.queryRelationByPage(queryDTO);
     }
 
     @ApiOperation(value = "用户入团退团申请", notes = "用户入团退团申请 @author hxy")
-    @PostMapping("/position/applyPositionRelation")
+    @PostMapping("/position/relation/apply")
     public ResponseDTO<String> applyPositionRelation(@RequestBody @Valid PositionRelationUpdateDTO updateDTO){
         return positionService.applyPositionRelation(updateDTO);
     }
 
     @ApiOperation(value = "审批用户入团退团申请", notes = "审批用户入团退团申请 @author hxy")
-    @PostMapping("/position/approvePositionRelation")
+    @PostMapping("/position/relation/approve")
     public ResponseDTO<String> approvePositionRelation(@RequestBody @Valid PositionRelationUpdateDTO updateDTO){
         return positionService.approvePositionRelation(updateDTO);
     }
