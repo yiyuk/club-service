@@ -30,6 +30,7 @@
         </where>
         order by create_time desc
     </select>
+
     <select id="selectByPage" resultType="net.lab1024.smartadmin.module.system.position.domain.entity.PositionEntity">
         SELECT
         <include refid="baseSql"></include>

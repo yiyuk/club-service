@@ -39,7 +39,13 @@ public class PositionRelationAddDTO {
     public PositionRelationAddDTO(List<Long> positionIdList, Long employeeId) {
         this.positionIdList = positionIdList;
         this.employeeId = employeeId;
-        this.status = PositionRelationTypeEnum.JOIN_WAIT.getValue();
+        this.status = PositionRelationTypeEnum.JOIN_SUCCESS.getValue();
+    }
+
+    public PositionRelationAddDTO(List<Long> positionIdList, Long employeeId, Integer status) {
+        this.positionIdList = positionIdList;
+        this.employeeId = employeeId;
+        this.status = status;
     }
 
     public PositionRelationAddDTO(@NotNull(message = "社团ID 不能为空") Long positionId, @NotNull(message = "用户ID 不能为空") Long employeeId, @NotNull(message = "关联状况 不能为空") Integer status) {

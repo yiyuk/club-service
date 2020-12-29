@@ -21,7 +21,7 @@ public enum PositionRelationTypeEnum implements BaseEnum {
 
     EXIT_SUCCESS(6, "用户退团成功"),
 
-    DISSOLUTION(7,"社团解散");
+    ADMIN(7,"用户为社团管理员");
 
 
 

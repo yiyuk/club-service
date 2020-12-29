@@ -186,13 +186,20 @@ public class PositionService {
         NoticeAddDTO noticeAddDTO = new NoticeAddDTO();
         PositionApproveResultDTO resultDTO = positionDao.selectPositionApproveByID(updateDTO.getId());
         String positionName = positionDao.selectPositionApproveByID(updateDTO.getId()).getPositionName();
-        Long approverId = SmartRequestTokenUtil.getRequestUser().getRequestUserId();
+        Long approverId = SmartRequestTokenUtil.getRequestUserId();
         updateDTO.setApproverId(approverId);
         if (updateDTO.getStatus() == ApproveTypeEnum.SUCCESS.getValue()) {
             //将角色更改为社团管理员
-            roleEmployeeDao.updateRoleById(SmartRequestTokenUtil.getRequestUser().getRequestUserId(),53);
+            roleEmployeeDao.updateRoleById(SmartRequestTokenUtil.getRequestUserId(),53);//TODO 这里有数字
             //新建社团
             positionDao.insert(SmartBeanUtil.copy(resultDTO, PositionEntity.class));
+            //创建社团关系
+            PositionRelationAddDTO positionRelationAddDTO = new PositionRelationAddDTO();
+            List<PositionEntity> list = positionDao.selectPositionListByName(positionName);
+            positionRelationAddDTO.setPositionId(list.get(0).getId());
+            positionRelationAddDTO.setEmployeeId(SmartRequestTokenUtil.getRequestUserId());
+            positionRelationAddDTO.setStatus(PositionRelationTypeEnum.ADMIN.getValue());
+            positionDao.insertRelation(positionRelationAddDTO);
             //发送通知
             MessageAddDTO messageAddDTO = new MessageAddDTO();
             messageAddDTO.setTitle("创建社团成功");
