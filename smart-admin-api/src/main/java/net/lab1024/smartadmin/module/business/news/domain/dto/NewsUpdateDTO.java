@@ -30,6 +30,9 @@ public class NewsUpdateDTO {
     @ApiModelPropertyEnum(JudgeEnum.class)//("新闻状态，是否发布")
     private Integer status;
 
+    @ApiModelProperty("社团id")
+    private Long positionId;
+
     public NewsUpdateDTO() {
     }
 }

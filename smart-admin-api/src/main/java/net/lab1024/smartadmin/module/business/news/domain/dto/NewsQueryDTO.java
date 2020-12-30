@@ -7,6 +7,7 @@ import net.lab1024.smartadmin.common.constant.JudgeEnum;
 import net.lab1024.smartadmin.common.domain.PageParamDTO;
 
 import javax.validation.constraints.NotBlank;
+import java.util.List;
 
 /**
  * @author yiyuzi
@@ -32,6 +33,12 @@ public class NewsQueryDTO  extends PageParamDTO {
 
     @ApiModelPropertyEnum(JudgeEnum.class)//("新闻状态，是否发布")
     private Integer status;
+
+    @ApiModelPropertyEnum(JudgeEnum.class)
+    private Integer isShow;
+
+    @ApiModelProperty("社团id集合")
+    private List<Long> positionIdList;
 
     public NewsQueryDTO() {
     }

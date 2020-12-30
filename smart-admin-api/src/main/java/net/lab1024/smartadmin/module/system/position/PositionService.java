@@ -25,6 +25,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.text.SimpleDateFormat;
+import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 import java.util.stream.Collectors;
@@ -67,7 +68,47 @@ public class PositionService {
     }
 
     /**
-     * 查询社团
+     * 根据社团名查询社团
+     *
+     * @param name
+     * @return
+     */
+    @Transactional(rollbackFor = Exception.class)
+    public ResponseDTO<List<PositionResultVO>> queryPositionByName(String name) {
+        List<PositionEntity> entityList = positionDao.selectPositionListByName(name);
+        List<PositionResultVO> positionResultVOList =
+                entityList.stream().map(e -> SmartBeanUtil.copy(e, PositionResultVO.class)).collect(Collectors.toList());
+        return ResponseDTO.succData(positionResultVOList);
+    }
+
+    /**
+     * 返回当前登录者管理的社团
+     *
+     * @return
+     */
+    @Transactional(rollbackFor = Exception.class)
+    public ResponseDTO<List<PositionResultVO>> queryPositionByAdmin() {
+        List<PositionEntity> entityList = new ArrayList<PositionEntity>();
+        if(SmartRequestTokenUtil.getRequestUser().getEmployeeBO().getIsSuperman()){
+            entityList = positionDao.selectPositionListByName("");
+        }else{
+            //查询用户管理的社团
+            PositionRelationQueryDTO positionRelationQueryDTO = new PositionRelationQueryDTO();
+            positionRelationQueryDTO.setEmployeeId(SmartRequestTokenUtil.getRequestUserId());
+            positionRelationQueryDTO.setStatus(PositionRelationTypeEnum.ADMIN.getValue());
+            List<PositionRelationResultDTO> positionRelationResultDTOList = positionDao.selectRelation(positionRelationQueryDTO);
+
+            for(PositionRelationResultDTO resultDTO:positionRelationResultDTOList){
+                entityList.add(positionDao.selectPositionByID(resultDTO.getPositionId()));
+            }
+        }
+        List<PositionResultVO> positionResultVOList =
+                entityList.stream().map(e -> SmartBeanUtil.copy(e, PositionResultVO.class)).collect(Collectors.toList());
+        return ResponseDTO.succData(positionResultVOList);
+    }
+
+    /**
+     * 分页查询社团
      *
      * @param queryDTO
      * @return

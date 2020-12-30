@@ -75,6 +75,9 @@ public interface PositionDao extends BaseMapper<PositionEntity> {
      */
     Integer updatePositionApprove(@Param("updateDTO")PositionApproveUpdateDTO updateDTO);
 
+
+
+
     /**
      * 根据条件 查询社团与用户关系
      *
@@ -91,7 +94,7 @@ public interface PositionDao extends BaseMapper<PositionEntity> {
     List<PositionRelationResultDTO> selectEmployeesRelation(@Param("employeeIdList") List<Long> employeeIdList);
 
     /**
-     * 根据条件查询用户社团关联信息
+     * 根据条件分页查询用户社团关联信息
      *
      * @param page
      * @param queryDTO

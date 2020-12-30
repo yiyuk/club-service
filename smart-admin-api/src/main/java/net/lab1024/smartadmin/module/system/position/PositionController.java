@@ -25,6 +25,25 @@ public class PositionController {
     @Autowired
     private PositionService positionService;
 
+    @ApiOperation(value = "根据ID查询社团", notes = "根据ID查询社团 @author zzr")
+    @GetMapping("/position/getById/{id}")
+    public ResponseDTO<PositionResultVO> getPositionById(@PathVariable Long id) {
+        return positionService.queryPositionById(id);
+    }
+
+    @ApiOperation(value = "查询社团列表", notes = "查询社团列表 @author hxy")
+    @GetMapping("/position/getByName/{name}")
+    public ResponseDTO<List<PositionResultVO>> queryPositionByName(@PathVariable String name) {
+        return positionService.queryPositionByName(name);
+    }
+
+    @ApiOperation(value = "返回当前登录者管理的社团", notes = "返回当前登录者管理的社团 @author hxy")
+    @PostMapping("/position/getAdmin")
+    public ResponseDTO<List<PositionResultVO>> queryPositionByAdmin() {
+        return positionService.queryPositionByAdmin();
+    }
+
+
     @ApiOperation(value = "分页查询所有社团", notes = "分页查询所有社团 @author zzr")
     @PostMapping("/position/getByPage")
     public ResponseDTO<PageResultDTO<PositionResultVO>> getJobPage(@RequestBody @Valid PositionQueryDTO queryDTO) {
@@ -41,12 +60,6 @@ public class PositionController {
     @PostMapping("/position/update")
     public ResponseDTO<String> updateJob(@RequestBody @Valid PositionUpdateDTO updateDTO) {
         return positionService.updatePosition(updateDTO);
-    }
-
-    @ApiOperation(value = "根据ID查询社团", notes = "根据ID查询社团 @author zzr")
-    @GetMapping("/position/getById/{id}")
-    public ResponseDTO<PositionResultVO> getPositionById(@PathVariable Long id) {
-        return positionService.queryPositionById(id);
     }
 
     @ApiOperation(value = "删除社团", notes = "删除社团 @author zzr")
