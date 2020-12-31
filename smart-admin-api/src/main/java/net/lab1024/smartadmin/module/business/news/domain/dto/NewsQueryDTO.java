@@ -34,8 +34,8 @@ public class NewsQueryDTO  extends PageParamDTO {
     @ApiModelPropertyEnum(JudgeEnum.class)//("新闻状态，是否发布")
     private Integer status;
 
-    @ApiModelPropertyEnum(JudgeEnum.class)
-    private Integer isShow;
+    @ApiModelProperty("是否为展示界面")
+    private Boolean isShow;
 
     @ApiModelProperty("社团id集合")
     private List<Long> positionIdList;

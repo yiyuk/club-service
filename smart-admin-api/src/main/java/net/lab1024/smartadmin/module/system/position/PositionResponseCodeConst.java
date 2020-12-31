@@ -19,6 +19,8 @@ public class PositionResponseCodeConst extends ResponseCodeConst {
 
     public static final PositionResponseCodeConst POSITION_NAME_DEFINE = new PositionResponseCodeConst(13500, "已存在同名社团");
 
+    public static final PositionResponseCodeConst JOIN_POSITION_DEFINE = new PositionResponseCodeConst(13600, "已存在提交过入团申请或已经入团");
+
     protected PositionResponseCodeConst(int code, String msg) {
         super(code, msg);
     }

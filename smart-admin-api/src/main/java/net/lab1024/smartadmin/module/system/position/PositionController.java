@@ -1,6 +1,7 @@
 package net.lab1024.smartadmin.module.system.position;
 
 import net.lab1024.smartadmin.common.anno.NoNeedLogin;
+import net.lab1024.smartadmin.common.anno.NoValidPrivilege;
 import net.lab1024.smartadmin.common.anno.OperateLog;
 import net.lab1024.smartadmin.common.domain.PageResultDTO;
 import net.lab1024.smartadmin.common.domain.ResponseDTO;
@@ -39,6 +40,7 @@ public class PositionController {
 
     @ApiOperation(value = "返回当前登录者管理的社团", notes = "返回当前登录者管理的社团 @author hxy")
     @PostMapping("/position/getAdmin")
+    @NoValidPrivilege
     public ResponseDTO<List<PositionResultVO>> queryPositionByAdmin() {
         return positionService.queryPositionByAdmin();
     }
@@ -119,5 +121,11 @@ public class PositionController {
     @PostMapping("/position/relation/approve")
     public ResponseDTO<String> approvePositionRelation(@RequestBody @Valid PositionRelationUpdateDTO updateDTO){
         return positionService.approvePositionRelation(updateDTO);
+    }
+
+    @ApiOperation(value = "退出社团", notes = "退出社团 @author hxy")
+    @GetMapping("/position/relation/exit/{id}")
+    public ResponseDTO<String> exitPosition(@PathVariable Long id){
+        return positionService.exitPosition(id);
     }
 }

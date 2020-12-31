@@ -73,19 +73,20 @@ public class PrivilegeEmployeeService {
      * @return
      */
     public Boolean checkEmployeeHavePrivilege(RequestTokenBO requestTokenBO, String controllerName, String methodName) {
-        if (StringUtils.isEmpty(controllerName) || StringUtils.isEmpty(methodName)) {
-            return false;
-        }
-        Boolean isSuperman = requestTokenBO.getEmployeeBO().getIsSuperman();
-        if (isSuperman) {
-            return true;
-        }
-        Map<String, List<String>> privileges = this.getPrivileges(requestTokenBO.getRequestUserId());
-        List<String> urlList = privileges.get(controllerName.toLowerCase());
-        if (CollectionUtils.isEmpty(urlList)) {
-            return false;
-        }
-        return urlList.contains(methodName);
+        return true;//TODO 后端不做权限要求
+//        if (StringUtils.isEmpty(controllerName) || StringUtils.isEmpty(methodName)) {
+//            return false;
+//        }
+//        Boolean isSuperman = requestTokenBO.getEmployeeBO().getIsSuperman();
+//        if (isSuperman) {
+//            return true;
+//        }
+//        Map<String, List<String>> privileges = this.getPrivileges(requestTokenBO.getRequestUserId());
+//        List<String> urlList = privileges.get(controllerName.toLowerCase());
+//        if (CollectionUtils.isEmpty(urlList)) {
+//            return false;
+//        }
+//        return urlList.contains(methodName);
     }
 
     public List<PrivilegeEntity> getEmployeeAllPrivilege(Long employeeId) {

@@ -17,13 +17,13 @@ import java.util.List;
 
 @Data
 public class PositionRelationUpdateDTO{
+    @ApiModelProperty("主键")
+    private Long id;
 
     @ApiModelProperty("社团ID")
-    @NotNull(message = "社团ID 不能为空")
     private Long positionId;
 
     @ApiModelProperty("用户ID")
-    @NotNull(message = "用户ID 不能为空")
     private Long employeeId;
 
     @ApiModelProperty("关联状况")

@@ -6,6 +6,8 @@ import net.lab1024.smartadmin.common.anno.ApiModelPropertyEnum;
 import net.lab1024.smartadmin.common.domain.PageParamDTO;
 import net.lab1024.smartadmin.module.system.position.PositionRelationTypeEnum;
 
+import java.util.List;
+
 /**
  * 社团-用户关系
  *
@@ -23,6 +25,12 @@ public class PositionRelationQueryDTO extends PageParamDTO {
     //@ApiModelProperty("关联状态")
     @ApiModelPropertyEnum(PositionRelationTypeEnum.class)
     private Integer status;
+
+    @ApiModelProperty("是否为展示界面")
+    private Boolean isShow;
+
+    @ApiModelProperty("社团id合集")
+    private List<Long> positionIdList;
 
     public PositionRelationQueryDTO(){
 

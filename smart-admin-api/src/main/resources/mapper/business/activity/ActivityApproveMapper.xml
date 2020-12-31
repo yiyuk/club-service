@@ -55,6 +55,12 @@
             <if test='queryDTO.timeType == "3"'>
                 AND now() >= t_stop_time
             </if>
+            <if test="queryDTO.positionIdList != null">
+                AND t.position_id IN
+                <foreach collection="queryDTO.positionIdList" open="(" close=")" separator="," item="item">
+                    #{item}
+                </foreach>
+            </if>
         </where>
     </select>
 

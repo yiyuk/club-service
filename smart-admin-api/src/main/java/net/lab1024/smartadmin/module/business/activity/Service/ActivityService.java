@@ -2,6 +2,7 @@ package net.lab1024.smartadmin.module.business.activity.Service;
 
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import net.lab1024.smartadmin.common.constant.ApproveTypeEnum;
+import net.lab1024.smartadmin.common.constant.RoleTypeEnum;
 import net.lab1024.smartadmin.common.domain.PageResultDTO;
 import net.lab1024.smartadmin.common.domain.ResponseDTO;
 import net.lab1024.smartadmin.module.business.activity.constant.ActivityResponseCodeConst;
@@ -10,8 +11,13 @@ import net.lab1024.smartadmin.module.business.activity.dao.ActivityDao;
 import net.lab1024.smartadmin.module.business.activity.dao.ActivityRelationDao;
 import net.lab1024.smartadmin.module.business.activity.domain.dto.*;
 import net.lab1024.smartadmin.module.business.activity.domain.entity.ActivityEntity;
+import net.lab1024.smartadmin.module.business.news.domain.dto.NewsQueryDTO;
 import net.lab1024.smartadmin.module.system.employee.EmployeeDao;
 import net.lab1024.smartadmin.module.system.position.PositionDao;
+import net.lab1024.smartadmin.module.system.position.PositionRelationTypeEnum;
+import net.lab1024.smartadmin.module.system.position.domain.dto.PositionRelationQueryDTO;
+import net.lab1024.smartadmin.module.system.position.domain.dto.PositionRelationResultDTO;
+import net.lab1024.smartadmin.module.system.role.roleemployee.RoleEmployeeDao;
 import net.lab1024.smartadmin.util.SmartBeanUtil;
 import net.lab1024.smartadmin.util.SmartPageUtil;
 import net.lab1024.smartadmin.util.SmartRequestTokenUtil;
@@ -19,6 +25,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 import java.util.stream.Collectors;
@@ -47,16 +54,34 @@ public class ActivityService {
     @Autowired
     private EmployeeDao employeeDao;
 
+    @Autowired
+    private RoleEmployeeDao roleEmployeeDao;
+
+    private boolean isClubAdmin(){
+        Long roleId = roleEmployeeDao.selectOneRoleIdByEmployeeId(SmartRequestTokenUtil.getRequestUserId());
+        if(roleId == (long) RoleTypeEnum.CLUB_ADMIN.getValue()) {
+            return true;
+        }
+        return false;
+    }
+
+
+    /**
+     * 开始时间不能大于结束时间，
+     *
+     * @param startTime
+     * @param stopTime
+     * @return
+     */
     private boolean checkTime(Date startTime, Date stopTime) {
-        //开始时间不能大于结束时间，
         if (startTime == null || stopTime == null) {
             return true;
         }
         Date nowTime = new Date();
         if (startTime.compareTo(stopTime) >= 0 || startTime.compareTo(nowTime) <= 0 || stopTime.compareTo(nowTime) <= 0) {
-            return false;
+            return true;
         }
-        return true;
+        return false;
     }
 
     /**
@@ -81,10 +106,23 @@ public class ActivityService {
      */
     @Transactional(rollbackFor = Exception.class)
     public ResponseDTO<PageResultDTO<ActivityResultDTO>> queryActivityByPage(ActivityQueryDTO queryDTO) {
+        //TODO 判断权限
+        if(!queryDTO.getIsShow() && isClubAdmin()){
+            PositionRelationQueryDTO positionRelationQueryDTO = new PositionRelationQueryDTO();
+            positionRelationQueryDTO.setEmployeeId(SmartRequestTokenUtil.getRequestUserId());
+            positionRelationQueryDTO.setStatus(PositionRelationTypeEnum.ADMIN.getValue());
+            List<PositionRelationResultDTO> list = positionDao.selectRelation(positionRelationQueryDTO);
+            if(list != null && list.size() > 0) {
+                List<Long> positionIdList = new ArrayList<Long>();
+                for (PositionRelationResultDTO resultDTO : list) {
+                    positionIdList.add(resultDTO.getPositionId());
+                }
+                queryDTO.setPositionIdList(positionIdList);
+            }
+        }
         Page page = SmartPageUtil.convert2QueryPage(queryDTO);
         List<ActivityResultDTO> resultDTOList = activityDao.selectByPage(page, queryDTO);
         page.setRecords(resultDTOList.stream().map(e -> SmartBeanUtil.copy(e, ActivityResultDTO.class)).collect(Collectors.toList()));
-        //PageResultDTO<ActivityApproveResultDTO> pageResultDTO = SmartPageUtil.convert2PageResult(page);
         return ResponseDTO.succData(SmartPageUtil.convert2PageResult(page));
     }
 

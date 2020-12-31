@@ -105,7 +105,7 @@ public class FundService {
     public ResponseDTO<String> approveFund(FundUpdateDTO updateDTO) {
         FundEntity entity = SmartBeanUtil.copy(updateDTO, FundEntity.class);
         entity.setUpdateTime(new Date());
-        entity.setApproveId(SmartRequestTokenUtil.getRequestUser().getRequestUserId());
+        entity.setApproveId(SmartRequestTokenUtil.getRequestUserId());
         fundDao.UpdateApprove(entity);
 
         entity = fundDao.selectById(updateDTO.getId());

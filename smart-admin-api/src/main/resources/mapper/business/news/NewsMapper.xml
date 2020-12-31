@@ -22,7 +22,7 @@
             pos.position_name
         from t_news news, t_employee users, t_position pos
         <where>
-            news.author_id = users.id
+            news.employee_id = users.id
             AND news.position_id = pos.id
             <if test="queryDTO.employeeId != null">
                 AND news.employee_id = #{queryDTO.employeeId}
@@ -38,6 +38,12 @@
             </if>
             <if test="queryDTO.status != null">
                 AND news.status = #{queryDTO.status}
+            </if>
+            <if test="queryDTO.positionIdList != null">
+                AND news.position_id IN
+                <foreach collection="queryDTO.positionIdList" open="(" close=")" separator="," item="item">
+                    #{item}
+                </foreach>
             </if>
         </where>
     </select>
@@ -62,7 +68,7 @@
         pos.position_name
         from t_news news, t_employee users, t_position pos
         <where>
-            news.author_id = users.id
+            news.employee_id = users.id
             AND news.position_id = pos.id
             AND news.id = #{id}
         </where>

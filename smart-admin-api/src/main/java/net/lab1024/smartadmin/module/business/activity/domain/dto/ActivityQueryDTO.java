@@ -9,6 +9,7 @@ import net.lab1024.smartadmin.module.business.activity.constant.ActivityTimeType
 
 import javax.validation.constraints.NotBlank;
 import java.util.Date;
+import java.util.List;
 
 /**
  * @author yiyuzi
@@ -31,6 +32,15 @@ public class ActivityQueryDTO extends PageParamDTO {
 
     @ApiModelPropertyEnum(ActivityTimeTypeEnum.class)
     private Integer timeType;
+
+    @ApiModelProperty("社团id合集")
+    private List<Long> positionIdList;
+
+    @ApiModelProperty("活动id合集")
+    private List<Long> activityIdList;
+
+    @ApiModelProperty("是否为展示列表")
+    private Boolean isShow;
 
     public ActivityQueryDTO() {
     }

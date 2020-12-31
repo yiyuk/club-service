@@ -92,6 +92,12 @@ public class ActivityController {
         return activityRelationService.queryActivityRelationById(id);
     }
 
+    @ApiOperation(value = "分页查询活动", notes = "分页查询活动申请记录 @author hxy")
+    @PostMapping("/activity/relation/getByRelAndPage")
+    public ResponseDTO<PageResultDTO<ActivityResultDTO>> queryActivityByRelAndPage(@RequestBody @Valid ActivityRelationQueryDTO queryDTO) {
+        return activityRelationService.queryActivityByRelAndPage(queryDTO);
+    }
+
     @ApiOperation(value = "分页查询参与活动信息", notes = "分页查询参与活动信息 @author hxy")
     @PostMapping("/activity/relation/getByPage")
     public ResponseDTO<PageResultDTO<ActivityRelationResultDTO>> queryActivityRelationByPage(@RequestBody @Valid ActivityRelationQueryDTO queryDTO) {

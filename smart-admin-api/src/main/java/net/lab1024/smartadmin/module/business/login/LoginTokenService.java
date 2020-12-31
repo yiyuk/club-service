@@ -100,17 +100,17 @@ public class LoginTokenService {
             return null;
         }
 
-        if (EmployeeStatusEnum.DISABLED.getValue().equals(employeeBO.getIsDisabled())) {
-            return null;
-        }
-
-        if (JudgeEnum.YES.equals(employeeBO.getIsLeave())) {
-            return null;
-        }
-
-        if (JudgeEnum.YES.equals(employeeBO.getIsDelete())) {
-            return null;
-        }
+//        if (EmployeeStatusEnum.DISABLED.getValue().equals(employeeBO.getIsDisabled())) {
+//            return null;
+//        }
+//
+//        if (JudgeEnum.YES.equals(employeeBO.getIsLeave())) {
+//            return null;
+//        }
+//
+//        if (JudgeEnum.YES.equals(employeeBO.getIsDelete())) {
+//            return null;
+//        }
 
         return new RequestTokenBO(employeeBO);
     }

@@ -16,6 +16,9 @@ public class PositionApproveQueryDTO {
     @ApiModelProperty("主键")
     private  Long id;
 
+    @ApiModelProperty("社团名")
+    private String positionName;
+
     @ApiModelPropertyEnum(ApproveTypeEnum.class)
     private Integer status;
 

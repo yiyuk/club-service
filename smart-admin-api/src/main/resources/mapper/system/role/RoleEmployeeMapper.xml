@@ -6,6 +6,8 @@
     <resultMap id="EmployeeDTO"
                type="net.lab1024.smartadmin.module.system.employee.domain.dto.EmployeeDTO"></resultMap>
 
+    <resultMap id="RoleEmployeeDTO"
+               type="net.lab1024.smartadmin.module.system.role.roleemployee.domain.RoleEmployeeDTO"></resultMap>
 
     <sql id="baseSql">
         er.id,
@@ -17,8 +19,8 @@
 
     <update id="updateRoleById">
         UPDATE t_role_employee
-        SET role_id = {role}
-        WHERE employee_id = {id}
+        SET role_id = #{role}
+        WHERE employee_id = #{id}
     </update>
 
     <select id="selectRoleIdByEmployeeId" resultType="java.lang.Long">
@@ -30,6 +32,14 @@
         er.employee_id = #{employeeId}
     </select>
 
+    <select id="selectOneRoleIdByEmployeeId" resultType="java.lang.Long">
+        SELECT
+        er.role_id
+        FROM
+        t_role_employee er
+        WHERE
+        er.employee_id = #{employeeId}
+    </select>
 
     <select id="selectEmployeeByNamePage" resultMap="EmployeeDTO">
         SELECT
@@ -61,6 +71,15 @@
                 AND er.role_id = #{queryDTO.roleId}
             </if>
         </where>
+    </select>
+
+    <select id="selectRoleByEmployeeId" resultMap="RoleEmployeeDTO">
+        SELECT
+            *
+        FROM
+        t_role_employee
+        WHERE
+        employee_id = #{id}
     </select>
 
     <select id="selectEmployeeByRoleId" resultMap="EmployeeDTO">

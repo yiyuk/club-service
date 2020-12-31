@@ -2,6 +2,7 @@ package net.lab1024.smartadmin.module.business.message;
 
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import net.lab1024.smartadmin.common.constant.JudgeEnum;
+import net.lab1024.smartadmin.common.constant.RoleTypeEnum;
 import net.lab1024.smartadmin.common.domain.PageResultDTO;
 import net.lab1024.smartadmin.common.domain.ResponseDTO;
 import net.lab1024.smartadmin.module.business.message.domain.MessageEntity;
@@ -10,6 +11,7 @@ import net.lab1024.smartadmin.module.business.message.domain.dto.MessageQueryDTO
 import net.lab1024.smartadmin.module.business.message.domain.dto.MessageResultDTO;
 import net.lab1024.smartadmin.module.business.message.domain.dto.MessageUpdateDTO;
 import net.lab1024.smartadmin.module.system.employee.EmployeeDao;
+import net.lab1024.smartadmin.module.system.role.roleemployee.RoleEmployeeDao;
 import net.lab1024.smartadmin.util.SmartBeanUtil;
 import net.lab1024.smartadmin.util.SmartPageUtil;
 import net.lab1024.smartadmin.util.SmartRequestTokenUtil;
@@ -19,7 +21,6 @@ import org.springframework.transaction.annotation.Transactional;
 
 import java.util.Date;
 import java.util.List;
-import java.util.stream.Collectors;
 
 /**
  * @author yiyuzi
@@ -34,6 +35,9 @@ public class MessageService {
 
     @Autowired
     private EmployeeDao employeeDao;
+
+    @Autowired
+    private RoleEmployeeDao roleEmployeeDao;
 
     /**
      * 根据id查询消息
@@ -55,8 +59,9 @@ public class MessageService {
      * @param queryDTO
      * @return
      */
-
     public ResponseDTO<PageResultDTO<MessageResultDTO>> queryMessageByPage(MessageQueryDTO queryDTO) {
+        Long roleId = roleEmployeeDao.selectOneRoleIdByEmployeeId(SmartRequestTokenUtil.getRequestUserId());
+        queryDTO.setReceiverId(SmartRequestTokenUtil.getRequestUserId());
         Page page = SmartPageUtil.convert2QueryPage(queryDTO);
         List<MessageResultDTO> dtoList = SmartBeanUtil.copyList(messageDao.selectByPage(page, queryDTO), MessageResultDTO.class);
         page.setRecords(dtoList);

@@ -2,6 +2,7 @@ package net.lab1024.smartadmin.module.business.news;
 
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import net.lab1024.smartadmin.common.constant.JudgeEnum;
+import net.lab1024.smartadmin.common.constant.RoleTypeEnum;
 import net.lab1024.smartadmin.common.domain.PageResultDTO;
 import net.lab1024.smartadmin.common.domain.ResponseDTO;
 import net.lab1024.smartadmin.module.business.news.domain.dto.NewsAddDTO;
@@ -41,18 +42,26 @@ public class NewsService {
     @Autowired
     private RoleEmployeeDao roleEmployeeDao;
 
+    /**
+     * 验证是否为某社团管理员，并把管理社团id合集写入list
+     *
+     * @param queryDTO
+     * @return
+     */
     private NewsQueryDTO isClubAdmin(NewsQueryDTO queryDTO){
-        //验证是否为某社团管理员，并把管理社团id合集写入list
-        PositionRelationQueryDTO positionRelationQueryDTO = new PositionRelationQueryDTO();
-        positionRelationQueryDTO.setEmployeeId(SmartRequestTokenUtil.getRequestUserId());
-        positionRelationQueryDTO.setStatus(PositionRelationTypeEnum.ADMIN.getValue());
-        List<PositionRelationResultDTO> list = positionDao.selectRelation(positionRelationQueryDTO);
-        if(list != null) {
-            List<Long> positionIdList = new ArrayList<Long>();
-            for (PositionRelationResultDTO resultDTO : list) {
-                positionIdList.add(resultDTO.getPositionId());
+        Long roleId = roleEmployeeDao.selectOneRoleIdByEmployeeId(SmartRequestTokenUtil.getRequestUserId());
+        if(!queryDTO.getIsShow() && roleId == (long)RoleTypeEnum.CLUB_ADMIN.getValue()) {
+            PositionRelationQueryDTO positionRelationQueryDTO = new PositionRelationQueryDTO();
+            positionRelationQueryDTO.setEmployeeId(SmartRequestTokenUtil.getRequestUserId());
+            positionRelationQueryDTO.setStatus(PositionRelationTypeEnum.ADMIN.getValue());
+            List<PositionRelationResultDTO> list = positionDao.selectRelation(positionRelationQueryDTO);
+            if(list != null && list.size() > 0) {
+                List<Long> positionIdList = new ArrayList<Long>();
+                for (PositionRelationResultDTO resultDTO : list) {
+                    positionIdList.add(resultDTO.getPositionId());
+                }
+                queryDTO.setPositionIdList(positionIdList);
             }
-            queryDTO.setPositionIdList(positionIdList);
         }
         return queryDTO;
     }
@@ -61,9 +70,7 @@ public class NewsService {
      * @description 分页查询
      */
     public ResponseDTO<PageResultDTO<NewsResultDTO>> queryByPage(NewsQueryDTO queryDTO) {
-        if(queryDTO.getIsShow() == JudgeEnum.NO.getValue()) {
-            queryDTO = this.isClubAdmin(queryDTO);
-        }
+        queryDTO = this.isClubAdmin(queryDTO);
         Page page = SmartPageUtil.convert2QueryPage(queryDTO);
         List<NewsResultDTO> dtoList = SmartBeanUtil.copyList(newsDao.queryByPage(page, queryDTO), NewsResultDTO.class);
         page.setRecords(dtoList);

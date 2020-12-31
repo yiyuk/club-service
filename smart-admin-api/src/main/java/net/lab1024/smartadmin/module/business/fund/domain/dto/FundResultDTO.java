@@ -2,6 +2,8 @@ package net.lab1024.smartadmin.module.business.fund.domain.dto;
 
 import lombok.Data;
 
+import java.util.Date;
+
 /**
  * @author yiyuzi
  * @date 2020/12/24 1:09
@@ -56,4 +58,8 @@ public class FundResultDTO {
      * 审核状态
      */
     private Integer approveStatus;
+
+    private Date updateTime;
+
+    private Date createTime;
 }

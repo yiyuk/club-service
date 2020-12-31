@@ -4,6 +4,7 @@ import com.baomidou.mybatisplus.core.mapper.BaseMapper;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import net.lab1024.smartadmin.module.system.employee.domain.dto.EmployeeDTO;
 import net.lab1024.smartadmin.module.system.role.basic.domain.dto.RoleQueryDTO;
+import net.lab1024.smartadmin.module.system.role.roleemployee.domain.RoleEmployeeDTO;
 import net.lab1024.smartadmin.module.system.role.roleemployee.domain.RoleEmployeeEntity;
 import org.apache.ibatis.annotations.Mapper;
 import org.apache.ibatis.annotations.Param;
@@ -35,6 +36,13 @@ public interface RoleEmployeeDao extends BaseMapper<RoleEmployeeEntity> {
     List<Long> selectRoleIdByEmployeeId(@Param("employeeId") Long employeeId);
 
     /**
+     * 根据用户id 查询角色
+     * @param employeeId
+     * @return
+     */
+    Long selectOneRoleIdByEmployeeId(@Param("employeeId") Long employeeId);
+
+    /**
      *
      * @param page
      * @param queryDTO
@@ -48,6 +56,13 @@ public interface RoleEmployeeDao extends BaseMapper<RoleEmployeeEntity> {
      * @return
      */
     List<EmployeeDTO> selectEmployeeByRoleId(@Param("roleId") Long roleId);
+
+    /**
+     *
+     * @param employeeId
+     * @return
+     */
+    RoleEmployeeDTO selectRoleByEmployeeId(@Param("id") Long employeeId);
     /**
      * 根据员工信息删除
      * @param employeeId

@@ -34,7 +34,7 @@ public interface FundDao extends BaseMapper<FundEntity> {
     List<FundResultDTO> selectByPage(Page page, @Param("queryDTO") FundQueryDTO queryDTO);
 
     /**
-     * 更新活动状态
+     * 更新状态
      *
      * @param entity
      * @return

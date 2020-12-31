@@ -33,11 +33,6 @@ public class NoticeEntity extends BaseEntity {
     private Long createUser;
 
     /**
-     * 消息接收人
-     */
-    private Long receiveUser;
-
-    /**
      * 发送状态
      */
     private Integer sendStatus;

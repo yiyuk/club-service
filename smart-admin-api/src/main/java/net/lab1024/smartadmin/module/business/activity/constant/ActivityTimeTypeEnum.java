@@ -11,7 +11,7 @@ public enum ActivityTimeTypeEnum implements BaseEnum {
     ALL_ACTIVITY(0,"全部活动"),
     NOT_START_ACTIVITY(1,"未开始的活动"),
     ONGOING_ACTIVITY(2,"正在进行的活动"),
-    ENDED_ACTIVITY(2,"已结束的活动");
+    ENDED_ACTIVITY(3,"已结束的活动");
 
     private Integer value;
 

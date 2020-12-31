@@ -16,14 +16,19 @@ public class PositionRelationResultDTO extends PageParamDTO {
     private Long id;
 
     /**
-     * 社团ID
-     */
-    private Long positionId;
-
-    /**
      * 用户ID
      */
     private Long employeeId;
+
+    /**
+     * 用户名称
+     */
+    private String actualName;
+
+    /**
+     * 社团ID
+     */
+    private Long positionId;
 
     /**
      * 社团名称
@@ -31,9 +36,9 @@ public class PositionRelationResultDTO extends PageParamDTO {
     private String positionName;
 
     /**
-     * 用户名称
+     * 社团简介
      */
-    private String actualName;
+    private System remark;
 
     /**
      * 更新时间

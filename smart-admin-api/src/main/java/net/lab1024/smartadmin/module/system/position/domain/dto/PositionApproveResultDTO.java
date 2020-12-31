@@ -35,6 +35,11 @@ public class PositionApproveResultDTO {
     private Long employeeId;
 
     /**
+     * 申请人id
+     */
+    private String actualName;
+
+    /**
      * 审核人ID
      */
     private Long approverId;

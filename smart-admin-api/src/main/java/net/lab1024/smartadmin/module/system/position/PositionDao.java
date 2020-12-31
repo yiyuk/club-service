@@ -126,6 +126,14 @@ public interface PositionDao extends BaseMapper<PositionEntity> {
     Integer deleteRelation(@Param("positionQueryDTO") PositionRelationQueryDTO positionQueryDTO);
 
     /**
+     * 删除关联关系
+     *
+     * @param id
+     * @return
+     */
+    Integer deleteRelationById(@Param("id") Long id);
+
+    /**
      * 删除指定用户的 关联关系
      *
      * @param employeeId

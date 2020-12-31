@@ -3,6 +3,7 @@ package net.lab1024.smartadmin.module.business.activity.Service;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import net.lab1024.smartadmin.common.constant.ApproveTypeEnum;
 import net.lab1024.smartadmin.common.constant.JudgeEnum;
+import net.lab1024.smartadmin.common.constant.RoleTypeEnum;
 import net.lab1024.smartadmin.common.domain.PageResultDTO;
 import net.lab1024.smartadmin.common.domain.ResponseDTO;
 import net.lab1024.smartadmin.module.business.activity.constant.ActivityResponseCodeConst;
@@ -18,7 +19,11 @@ import net.lab1024.smartadmin.module.business.notice.NoticeService;
 import net.lab1024.smartadmin.module.business.notice.domain.dto.NoticeAddDTO;
 import net.lab1024.smartadmin.module.system.employee.EmployeeDao;
 import net.lab1024.smartadmin.module.system.position.PositionDao;
+import net.lab1024.smartadmin.module.system.position.PositionRelationTypeEnum;
+import net.lab1024.smartadmin.module.system.position.domain.dto.PositionRelationQueryDTO;
+import net.lab1024.smartadmin.module.system.position.domain.dto.PositionRelationResultDTO;
 import net.lab1024.smartadmin.module.system.position.domain.entity.PositionEntity;
+import net.lab1024.smartadmin.module.system.role.roleemployee.RoleEmployeeDao;
 import net.lab1024.smartadmin.util.SmartBeanUtil;
 import net.lab1024.smartadmin.util.SmartPageUtil;
 import net.lab1024.smartadmin.util.SmartRequestTokenUtil;
@@ -27,6 +32,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 import java.util.stream.Collectors;
@@ -55,6 +61,16 @@ public class ActivityRelationService {
     @Autowired
     private MessageService messageService;
 
+    @Autowired
+    private RoleEmployeeDao roleEmployeeDao;
+
+    private boolean isClubAdmin(){
+        Long roleId = roleEmployeeDao.selectOneRoleIdByEmployeeId(SmartRequestTokenUtil.getRequestUserId());
+        if(roleId == (long) RoleTypeEnum.CLUB_ADMIN.getValue()) {
+            return true;
+        }
+        return false;
+    }
 
     /**
      * 根据id查询参与活动信息
@@ -80,7 +96,63 @@ public class ActivityRelationService {
      * @return
      */
     @Transactional(rollbackFor = Exception.class)
+    public ResponseDTO<PageResultDTO<ActivityResultDTO>> queryActivityByRelAndPage(ActivityRelationQueryDTO queryDTO) {
+        Page page = SmartPageUtil.convert2QueryPage(queryDTO);
+        if(queryDTO.getIsShow()){
+            queryDTO.setEmployeeId(SmartRequestTokenUtil.getRequestUserId());
+        }
+        List<ActivityRelationResultDTO> resultDTOList = activityRelationDao.selectActivityRelationByPage(page, queryDTO);
+//        List<Long> positionIdList = new ArrayList<>();
+//        resultDTOList.forEach(e -> {
+//            if(e.getPositionId() != null){
+//                positionIdList.add(e.getPositionId());
+//            }
+//        });
+//        ActivityQueryDTO activityQueryDTO = SmartBeanUtil.copy(queryDTO, ActivityQueryDTO.class);
+//        activityQueryDTO.setEmployeeId(SmartRequestTokenUtil.getRequestUserId());
+//        if(positionIdList.size() > 0){
+//            activityQueryDTO.setPositionIdList(positionIdList);
+//        }
+        List<Long> idList = new ArrayList<>();
+        resultDTOList.forEach(e -> {
+            if(e.getActivityId() != null){
+                idList.add(e.getActivityId());
+            }
+        });
+        ActivityQueryDTO activityQueryDTO = SmartBeanUtil.copy(queryDTO, ActivityQueryDTO.class);
+
+        List<ActivityResultDTO> activityResultDTOList = new ArrayList<>();
+        if(idList.size() > 0){
+            activityQueryDTO.setActivityIdList(idList);
+            page = SmartPageUtil.convert2QueryPage(activityQueryDTO);
+            activityResultDTOList = activityDao.selectByPage(page, activityQueryDTO);
+        }
+        page.setRecords(activityResultDTOList.stream().map(e -> SmartBeanUtil.copy(e, ActivityResultDTO.class)).collect(Collectors.toList()));
+        //PageResultDTO<ActivityApproveResultDTO> pageResultDTO = SmartPageUtil.convert2PageResult(page);
+        return ResponseDTO.succData(SmartPageUtil.convert2PageResult(page));
+    }
+
+    /**
+     * 分页查询参与活动信息
+     *
+     * @param queryDTO
+     * @return
+     */
+    @Transactional(rollbackFor = Exception.class)
     public ResponseDTO<PageResultDTO<ActivityRelationResultDTO>> queryActivityRelationByPage(ActivityRelationQueryDTO queryDTO) {
+        if(!queryDTO.getIsShow() && isClubAdmin()){
+            PositionRelationQueryDTO positionRelationQueryDTO = new PositionRelationQueryDTO();
+            positionRelationQueryDTO.setEmployeeId(SmartRequestTokenUtil.getRequestUserId());
+            positionRelationQueryDTO.setStatus(PositionRelationTypeEnum.ADMIN.getValue());
+            List<PositionRelationResultDTO> list = positionDao.selectRelation(positionRelationQueryDTO);
+            if(list != null && list.size() > 0) {
+                List<Long> positionIdList = new ArrayList<Long>();
+                for (PositionRelationResultDTO resultDTO : list) {
+                    positionIdList.add(resultDTO.getPositionId());
+                }
+                queryDTO.setPositionIdList(positionIdList);
+            }
+        }
         Page page = SmartPageUtil.convert2QueryPage(queryDTO);
         List<ActivityRelationResultDTO> resultDTOList = activityRelationDao.selectActivityRelationByPage(page, queryDTO);
         page.setRecords(resultDTOList.stream().map(e -> SmartBeanUtil.copy(e, ActivityRelationResultDTO.class)).collect(Collectors.toList()));

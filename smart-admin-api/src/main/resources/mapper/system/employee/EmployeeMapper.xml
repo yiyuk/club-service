@@ -45,21 +45,21 @@
             </if>
             <if test="queryDTO.keyword != null and queryDTO.keyword != ''">
                 <bind name="likeName" value=" '%' + queryDTO.keyword +'%' "></bind>
-                AND (e.actual_name like #{likeName} or e.nick_name like #{likeName} or e.phone like #{likeName})
+                AND (e.actual_name like #{likeName} or e.phone like #{likeName})
             </if>
 
-            <if test="queryDTO.departmentId != null">
-                AND e.department_id = #{queryDTO.departmentId}
-            </if>
-            <if test="queryDTO.isLeave != null">
-                AND e.is_leave = #{queryDTO.isLeave}
-            </if>
-            <if test="queryDTO.isDisabled != null">
-                AND e.is_disabled = #{queryDTO.isDisabled}
-            </if>
-            <if test="queryDTO.isDelete != null">
-                AND e.is_delete = #{queryDTO.isDelete}
-            </if>
+            <!--<if test="queryDTO.departmentId != null">-->
+                <!--AND e.department_id = #{queryDTO.departmentId}-->
+            <!--</if>-->
+            <!--<if test="queryDTO.isLeave != null">-->
+                <!--AND e.is_leave = #{queryDTO.isLeave}-->
+            <!--</if>-->
+            <!--<if test="queryDTO.isDisabled != null">-->
+                <!--AND e.is_disabled = #{queryDTO.isDisabled}-->
+            <!--</if>-->
+            <!--<if test="queryDTO.isDelete != null">-->
+                <!--AND e.is_delete = #{queryDTO.isDelete}-->
+            <!--</if>-->
             <if test="queryDTO.employeeIds != null and queryDTO.employeeIds.size > 0">
                 AND e.id IN
                 <foreach collection="queryDTO.employeeIds" open="(" close= ")" item="item" separator=","  >

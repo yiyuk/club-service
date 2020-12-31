@@ -35,15 +35,27 @@
             <if test="queryDTO.activityName != null and queryDTO.activityName != ''">
                 AND INSTR(t.activity_name,#{queryDTO.activityName})
             </if>
-            <if test='queryDTO.timeType == "1"'>
+            <if test='queryDTO.timeType != null and queryDTO.timeType == "1"'>
                 AND t.start_time > now()
             </if>
-            <if test='queryDTO.timeType == "2"'>
+            <if test='queryDTO.timeType != null and queryDTO.timeType == "2"'>
                 AND now() >= t.start_time
                 AND t.stop_time > now()
             </if>
-            <if test='queryDTO.timeType == "3"'>
-                AND now() >= t_stop_time
+            <if test='queryDTO.timeType != null and queryDTO.timeType == "3"'>
+                AND now() >= t.stop_time
+            </if>
+            <if test="queryDTO.positionIdList != null">
+                AND t.position_id IN
+                <foreach collection="queryDTO.positionIdList" open="(" close=")" separator="," item="item">
+                    #{item}
+                </foreach>
+            </if>
+            <if test="queryDTO.activityIdList != null">
+                AND t.id IN
+                <foreach collection="queryDTO.activityIdList" open="(" close=")" separator="," item="item">
+                    #{item}
+                </foreach>
             </if>
         </where>
     </select>

@@ -10,6 +10,7 @@ import net.lab1024.smartadmin.module.business.activity.constant.ActivityTimeType
 
 import javax.validation.constraints.NotBlank;
 import java.util.Date;
+import java.util.List;
 
 /**
  * 查询活动申请
@@ -37,6 +38,12 @@ public class ActivityApproveQueryDTO extends PageParamDTO {
 
     @ApiModelPropertyEnum(ApproveTypeEnum.class)
     private Integer status;
+
+    @ApiModelProperty("社团id合集")
+    private List<Long> positionIdList;
+
+    @ApiModelProperty("是否为展示列表")
+    private Boolean isShow;
 
     @ApiModelPropertyEnum(ActivityTimeTypeEnum.class)
     private Integer timeType;

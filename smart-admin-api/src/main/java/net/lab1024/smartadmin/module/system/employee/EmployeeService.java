@@ -180,9 +180,9 @@ public class EmployeeService {
         }
 
         entity.setCreateUser(requestToken.getRequestUserId());
-        if (StringUtils.isEmpty(entity.getBirthday())) {
-            entity.setBirthday(null);
-        }
+//        if (StringUtils.isEmpty(entity.getBirthday())) {
+//            entity.setBirthday(null);
+//        }
         employeeDao.insert(entity);
 
 //        PositionRelationAddDTO positionRelAddDTO = new PositionRelationAddDTO(employeeAddDto.getPositionIdList(), entity.getId());

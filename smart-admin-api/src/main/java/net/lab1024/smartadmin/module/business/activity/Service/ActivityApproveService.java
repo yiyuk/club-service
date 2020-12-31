@@ -59,9 +59,9 @@ public class ActivityApproveService {
         }
         Date nowTime = new Date();
         if (startTime.compareTo(stopTime) >= 0 || startTime.compareTo(nowTime) <= 0 || stopTime.compareTo(nowTime) <= 0) {
-            return false;
+            return true;
         }
-        return true;
+        return false;
     }
 
     /**
@@ -70,7 +70,7 @@ public class ActivityApproveService {
      * @param id
      * @return
      */
-    public ResponseDTO<ActivityApproveResultDTO> queryActivityApproveById(long id) {
+    public ResponseDTO<ActivityApproveResultDTO> queryActivityApproveById(Long id) {
         ActivityApproveEntity activityApproveEntity = activityApproveDao.selectById(id);
         ActivityApproveResultDTO resultDTO = SmartBeanUtil.copy(activityApproveEntity, ActivityApproveResultDTO.class);
         resultDTO.setPositionName(positionDao.selectPositionByID(activityApproveEntity.getPositionId()).getPositionName());
@@ -128,6 +128,7 @@ public class ActivityApproveService {
      */
     @Transactional(rollbackFor = Exception.class)
     public ResponseDTO<String> approveActivity(ActivityApproveUpdateDTO updateDTO) {
+        //重复审核
         if (activityApproveDao.selectById(updateDTO.getId()).getStatus() != ApproveTypeEnum.WAIT.getValue()){
             return ResponseDTO.wrap(ActivityResponseCodeConst.RE_APPROVE_ERROR);
         }
@@ -151,6 +152,7 @@ public class ActivityApproveService {
             messageAddDTO.setSendStatus(JudgeEnum.YES.getValue());
             messageService.addMessage(messageAddDTO);
         } else if (updateDTO.getStatus() == ApproveTypeEnum.FAIL.getValue()) {
+            activityApproveDao.deleteById(updateDTO.getId());
             //发送通知
             MessageAddDTO messageAddDTO = new MessageAddDTO();
             messageAddDTO.setTitle("活动申请失败");
