@@ -325,6 +325,16 @@ public class PositionService {
     @Transactional(rollbackFor = Exception.class)
     public ResponseDTO<String> applyPositionRelation(PositionRelationUpdateDTO updateDTO) {
         if (updateDTO.getId() == null) {
+            // 检查用户是否已经提交过申请或已经入团
+            PositionRelationQueryDTO positionRelationQueryDTO = new PositionRelationQueryDTO();
+            positionRelationQueryDTO.setEmployeeId(SmartRequestTokenUtil.getRequestUserId());
+            List<PositionRelationResultDTO> list = positionDao.selectRelation(positionRelationQueryDTO);
+            for(PositionRelationResultDTO item : list){
+                if(item.getPositionId() == updateDTO.getPositionId() && item.getStatus() != PositionRelationTypeEnum.EXIT_SUCCESS.getValue()){
+                    return ResponseDTO.wrap(PositionResponseCodeConst.JOIN_POSITION_DEFINE);
+                }
+            }
+
             updateDTO.setEmployeeId(SmartRequestTokenUtil.getRequestUserId());
             PositionRelationAddDTO positionRelAddDTO = SmartBeanUtil.copy(updateDTO, PositionRelationAddDTO.class);
             positionRelAddDTO.setStatus(PositionRelationTypeEnum.JOIN_WAIT.getValue());

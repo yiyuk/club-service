@@ -23,6 +23,31 @@ public class ActivityRelationResultDTO {
     private String activityName;
 
     /**
+     * 活动简介
+     */
+    private String activityRemark;
+
+    /**
+     * 活动开始时间
+     */
+    private Date startTime;
+
+    /**
+     * 活动结束时间
+     */
+    private Date stopTime;
+
+    /**
+     * 当前活动人数
+     */
+    private Long activityNumber;
+
+    /**
+     * 人数上限
+     */
+    private Long activityMaximum;
+
+    /**
      * 社团id
      */
     private Long positionId;
@@ -66,4 +91,9 @@ public class ActivityRelationResultDTO {
      * 审批人姓名(社团管理员)
      */
     private String approveName;
+
+    /**
+     * 活动场地
+     */
+    private String place;
 }

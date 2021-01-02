@@ -8,6 +8,37 @@
     <resultMap id="ActivityRelationResultDTO"
                type="net.lab1024.smartadmin.module.business.activity.domain.dto.ActivityRelationResultDTO"></resultMap>
 
+    <select id="selectRelationById" resultMap="ActivityRelationResultDTO">
+        SELECT
+        t.id,
+        t.activity_id,
+        t.employee_id,
+        t.position_id,
+        t.status,
+        t.join_status,
+        t.approve_time,
+        t.approve_id,
+        t.create_time,
+        t.update_time,
+
+        users.actual_name,
+        pos.position_name,
+        act.activity_name,
+        act.activity_remark,
+        act.start_time,
+        act.stop_time,
+        act.place,
+        act.activity_number,
+        act.activity_maximum
+        FROM t_activity_relation t, t_employee users, t_position pos, t_activity act
+        <where>
+            t.employee_id = users.id
+            AND t.position_id = pos.id
+            AND t.activity_id = act.id
+            AND t.id = #{id}
+        </where>
+    </select>
+
     <select id="selectActivityRelationByPage" resultMap="ActivityRelationResultDTO">
         SELECT
         t.id,

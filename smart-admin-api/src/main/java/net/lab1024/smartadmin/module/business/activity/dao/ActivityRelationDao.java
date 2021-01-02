@@ -18,6 +18,8 @@ import java.util.List;
 @Mapper
 @Component
 public interface ActivityRelationDao extends BaseMapper<ActivityRelationEntity> {
+    ActivityRelationResultDTO selectRelationById(@Param("id") Long id);
+
     /**
      * 分页查询活动申请
      *

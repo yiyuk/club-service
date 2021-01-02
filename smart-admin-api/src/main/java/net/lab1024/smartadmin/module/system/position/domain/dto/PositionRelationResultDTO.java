@@ -38,7 +38,7 @@ public class PositionRelationResultDTO extends PageParamDTO {
     /**
      * 社团简介
      */
-    private System remark;
+    private String remark;
 
     /**
      * 更新时间

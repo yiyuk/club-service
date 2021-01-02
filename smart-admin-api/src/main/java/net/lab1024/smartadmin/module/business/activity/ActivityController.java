@@ -94,7 +94,7 @@ public class ActivityController {
 
     @ApiOperation(value = "分页查询活动", notes = "分页查询活动申请记录 @author hxy")
     @PostMapping("/activity/relation/getByRelAndPage")
-    public ResponseDTO<PageResultDTO<ActivityResultDTO>> queryActivityByRelAndPage(@RequestBody @Valid ActivityRelationQueryDTO queryDTO) {
+    public ResponseDTO<PageResultDTO<ActivityRelationResultDTO>> queryActivityByRelAndPage(@RequestBody @Valid ActivityRelationQueryDTO queryDTO) {
         return activityRelationService.queryActivityByRelAndPage(queryDTO);
     }
 
@@ -117,8 +117,8 @@ public class ActivityController {
     }
 
     @ApiOperation(value = "更新参与活动状态", notes = "更新参与活动状态 @author hxy")
-    @PostMapping("/activity/relation/updateJoinStatus")
-    public ResponseDTO<String> updateActivityRelationJoinStatus(@RequestBody @Valid ActivityRelationUpdateDTO updateDTO) {
+    @PostMapping("/activity/relation/joinActivity")
+    public ResponseDTO<String> joinActivity(@RequestBody @Valid ActivityRelationUpdateDTO updateDTO) {
         return activityRelationService.updateActivityRelationJoinStatus(updateDTO);
     }
 }

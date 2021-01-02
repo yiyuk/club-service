@@ -79,13 +79,7 @@ public class ActivityRelationService {
      * @return
      */
     public ResponseDTO<ActivityRelationResultDTO> queryActivityRelationById(long id) {
-        ActivityRelationEntity entity = activityRelationDao.selectById(id);
-        ActivityRelationResultDTO resultDTO = SmartBeanUtil.copy(entity, ActivityRelationResultDTO.class);
-        resultDTO.setPositionName(positionDao.selectPositionByID(entity.getPositionId()).getPositionName());
-        resultDTO.setEmployeeName(employeeDao.selectById(entity.getEmployeeId()).getActualName());
-        if (entity.getApproveId() != null) {
-            resultDTO.setApproveName(employeeDao.selectById(entity.getApproveId()).getActualName());
-        }
+        ActivityRelationResultDTO resultDTO = activityRelationDao.selectRelationById(id);
         return ResponseDTO.succData(resultDTO);
     }
 
@@ -96,7 +90,7 @@ public class ActivityRelationService {
      * @return
      */
     @Transactional(rollbackFor = Exception.class)
-    public ResponseDTO<PageResultDTO<ActivityResultDTO>> queryActivityByRelAndPage(ActivityRelationQueryDTO queryDTO) {
+    public ResponseDTO<PageResultDTO<ActivityRelationResultDTO>> queryActivityByRelAndPage(ActivityRelationQueryDTO queryDTO) {
         Page page = SmartPageUtil.convert2QueryPage(queryDTO);
         if(queryDTO.getIsShow()){
             queryDTO.setEmployeeId(SmartRequestTokenUtil.getRequestUserId());
@@ -113,21 +107,21 @@ public class ActivityRelationService {
 //        if(positionIdList.size() > 0){
 //            activityQueryDTO.setPositionIdList(positionIdList);
 //        }
-        List<Long> idList = new ArrayList<>();
-        resultDTOList.forEach(e -> {
-            if(e.getActivityId() != null){
-                idList.add(e.getActivityId());
-            }
-        });
-        ActivityQueryDTO activityQueryDTO = SmartBeanUtil.copy(queryDTO, ActivityQueryDTO.class);
-
-        List<ActivityResultDTO> activityResultDTOList = new ArrayList<>();
-        if(idList.size() > 0){
-            activityQueryDTO.setActivityIdList(idList);
-            page = SmartPageUtil.convert2QueryPage(activityQueryDTO);
-            activityResultDTOList = activityDao.selectByPage(page, activityQueryDTO);
-        }
-        page.setRecords(activityResultDTOList.stream().map(e -> SmartBeanUtil.copy(e, ActivityResultDTO.class)).collect(Collectors.toList()));
+//        List<Long> idList = new ArrayList<>();
+//        resultDTOList.forEach(e -> {
+//            if(e.getActivityId() != null){
+//                idList.add(e.getActivityId());
+//            }
+//        });
+//        ActivityQueryDTO activityQueryDTO = SmartBeanUtil.copy(queryDTO, ActivityQueryDTO.class);
+//
+//        List<ActivityResultDTO> activityResultDTOList = new ArrayList<>();
+//        if(idList.size() > 0){
+//            activityQueryDTO.setActivityIdList(idList);
+//            page = SmartPageUtil.convert2QueryPage(activityQueryDTO);
+//            activityResultDTOList = activityDao.selectByPage(page, activityQueryDTO);
+//        }
+        page.setRecords(resultDTOList.stream().map(e -> SmartBeanUtil.copy(e, ActivityRelationResultDTO.class)).collect(Collectors.toList()));
         //PageResultDTO<ActivityApproveResultDTO> pageResultDTO = SmartPageUtil.convert2PageResult(page);
         return ResponseDTO.succData(SmartPageUtil.convert2PageResult(page));
     }
