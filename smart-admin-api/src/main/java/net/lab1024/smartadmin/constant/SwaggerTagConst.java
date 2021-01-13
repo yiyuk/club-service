@@ -15,12 +15,6 @@ public class SwaggerTagConst {
 
         public static final String MANAGER_DEPARTMENT = "管理端-部门";
 
-        public static final String MANAGER_ROLE = "管理端-角色";
-
-        public static final String MANAGER_ROLE_USER = "管理端-角色用户";
-
-        public static final String MANAGER_ROLE_PRIVILEGE = "管理端-角色权限";
-
         public static final String MANAGER_SMART_RELOAD = "管理端-smart reload";
 
         public static final String MANAGER_ORDER_OPERATE_LOG = "管理端-单据操作日志";
@@ -32,8 +26,6 @@ public class SwaggerTagConst {
         public static final String MANAGER_USER_OPERATE_LOG = "管理端-用户操作日志";
 
         public static final String MANAGER_DATA_SCOPE = "管理端-数据范围";
-
-        public static final String MANAGER_NOTICE = "管理端-系统通知";
 
         public static final String MANAGER_FILE = "通用-文件服务";
 
@@ -55,15 +47,21 @@ public class SwaggerTagConst {
 
         public static final String COMMON_MESSAGE = "通用-消息";
 
-        public static final String MANAGER_JOB = "管理端-社团";//"管理端-岗位";
+        public static final String MANAGER_JOB = "通用-社团";
 
-        public static final String MANAGER_USER = "管理端-用户";
+        public static final String MANAGER_USER = "通用-用户";
 
-        public static final String MANAGER_USER_LOGIN = "管理端-用户登录";
+        public static final String MANAGER_USER_LOGIN = "通用-用户登录";
 
-        public static final String MANAGER_PRIVILEGE = "通用-权限";
+        public static final String MANAGER_PRIVILEGE = "管理端-权限";
 
+        public static final String MANAGER_ROLE = "管理端-角色";
 
+        public static final String MANAGER_ROLE_USER = "管理端-角色用户";
+
+        public static final String MANAGER_ROLE_PRIVILEGE = "管理端-角色权限";
+
+        public static final String MANAGER_NOTICE = "管理端-系统通知";
     }
 
     /**

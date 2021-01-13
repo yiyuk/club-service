@@ -19,7 +19,7 @@ import java.util.List;
  * @author listen
  * @date 2017/12/28 10:10
  */
-@Api(tags = {SwaggerTagConst.Admin.MANAGER_ROLE})
+@Api(tags = {SwaggerTagConst.Club.MANAGER_ROLE})
 @OperateLog
 @RestController
 public class RoleController {

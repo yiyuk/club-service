@@ -53,15 +53,15 @@ public class ActivityApproveService {
     private MessageService messageService;
 
     private boolean checkTime(Date startTime, Date stopTime) {
-        //开始时间不能大于结束时间，
+        //开始时间不能晚于结束时间，
         if (startTime == null || stopTime == null) {
-            return true;
+            return false;
         }
         Date nowTime = new Date();
         if (startTime.compareTo(stopTime) >= 0 || startTime.compareTo(nowTime) <= 0 || stopTime.compareTo(nowTime) <= 0) {
-            return true;
+            return false;
         }
-        return false;
+        return true;
     }
 
     /**

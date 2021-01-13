@@ -181,7 +181,7 @@ public class LoginService {
     }
 
     /**
-     * 初始化员工权限
+     * 初始化用户权限
      *
      * @param employeeId
      * @return

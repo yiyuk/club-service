@@ -25,7 +25,7 @@ import javax.validation.Valid;
  * @since JDK1.8
  */
 @RestController
-@Api(tags = {SwaggerTagConst.Admin.MANAGER_NOTICE})
+@Api(tags = {SwaggerTagConst.Club.MANAGER_NOTICE})
 public class NoticeController {
 
     @Autowired

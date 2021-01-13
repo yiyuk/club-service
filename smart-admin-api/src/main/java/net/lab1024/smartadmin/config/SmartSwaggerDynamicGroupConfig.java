@@ -201,7 +201,7 @@ public class SmartSwaggerDynamicGroupConfig implements EnvironmentAware, BeanDef
                 .description(description)
                 .version(version)
                 .license("Apache License Version 2.0")
-                .contact(new Contact("1024创新实验室", "http://www.1024lab.net", ""))
+                .contact(new Contact("hxy", "", ""))
                 .termsOfServiceUrl(serviceUrl)
                 .build();
     }

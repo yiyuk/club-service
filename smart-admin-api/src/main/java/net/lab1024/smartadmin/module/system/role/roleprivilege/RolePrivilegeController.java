@@ -13,7 +13,7 @@ import org.springframework.web.bind.annotation.*;
 import javax.validation.Valid;
 
 /**
- * [ 与员工权限相关：角色权限关系、权限列表 ]
+ * [ 与用户权限相关：角色权限关系、权限列表 ]
  *
  * @author yandanyang
  * @version 1.0
@@ -24,7 +24,7 @@ import javax.validation.Valid;
  */
 @OperateLog
 @RestController
-@Api(tags = {SwaggerTagConst.Admin.MANAGER_ROLE_PRIVILEGE})
+@Api(tags = {SwaggerTagConst.Club.MANAGER_ROLE_PRIVILEGE})
 public class RolePrivilegeController {
 
     @Autowired
