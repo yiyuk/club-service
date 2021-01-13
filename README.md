@@ -10,7 +10,7 @@ smart-admin-service
 
 #### 创建数据库
 
-先执行：src/main/resources/sql/smart-admin.sql
+先执行：src/main/resources/sql/smart-admin-dev.sql
 
 再执行：src/main/resources/sql/quartz_mysql_2.3.0.sql
 
